@@ -14,28 +14,19 @@ public class TimedAspect : MonoBehaviour
     public bool hasSlider;              // will this aspect use a UI slider?
     public Slider currentPercentSlider; // Unity UI slider to show the current percentage of the cycle completed (will go up and down on a back and forth aspect)
 
-    public NaughtyComponent dropdown;
-    public int cycleType;       // 0 is no cycle, 1 is Go Until, 2 is Back and Forth
+    public bool isOcean;
+    public float lowTide;
+    public float highTide;
+    public float currentTide;
+
+    public bool grows;
+
+    public bool backAndForth;
 
     void Start()
     {
         currentCyclePercent = 0;
         cycleCompleted = false;
         // dropdown.stringValue = "Go Until";
-    }
-
-    private void Update()
-    {
-        switch (dropdown.stringValue)
-        {
-            case "Go Until":
-                cycleType = 1;
-                break;
-            case "Back and Forth":
-                cycleType = 2;
-                break;
-            default:
-                break;
-        }
     }
 }

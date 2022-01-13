@@ -12,7 +12,7 @@ public class WorldTimer : MonoBehaviour
     int currentHour;                // the current hour in game
     int currentMinute;              // the current minute in game
 
-    public TMPro.TMP_Text timeText;     // Unity UI text to show the current time
+    public TMPro.TMP_Text timeText; // Unity UI text to show the current time
 
 
     public TimedAspect[] timedAspects;
@@ -57,62 +57,62 @@ public class WorldTimer : MonoBehaviour
             {
                 timeText.text = "Time: " + currentHour + ":" + currentMinute;
             }
-
-
-
         }
 
         for(int i = 0; i < timedAspects.Length; i++)
         {
-            switch (timedAspects[i].cycleType)
+            if (timedAspects[i].backAndForth)   // the aspect has a Back and Forth cycle
             {
-                case 0:         // the aspect doesn't have a cycle
-                    break;
+                if (!timedAspects[i].cycleCompleted)
+                {
+                    timedAspects[i].currentCyclePercent += Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
+                    // currentCyclePercent is a fraction equaling Time.deltaTime divided by the number of IRL seconds
+                    // required to reach the number of in-game time intervals needed to reach the cycleSpeed
+                }
+                else
+                {
+                    timedAspects[i].currentCyclePercent -= Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
+                }
 
-                case 1:         // the aspect has a Go Until cycle
-                    if (!timedAspects[i].cycleCompleted)
-                    {
-                        timedAspects[i].currentCyclePercent += Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
-                        // currentCyclePercent is a fraction equaling Time.deltaTime divided by the number of IRL seconds
-                        // required to reach the number of in-game time intervals needed to reach the cycleSpeed
-                    }
+                if (timedAspects[i].currentCyclePercent >= 1)
+                {
+                    timedAspects[i].cycleCompleted = true;
+                }
 
-                    if (timedAspects[i].currentCyclePercent >= 1)
-                    {
-                        timedAspects[i].cycleCompleted = true;
-                    }
-                    break;
+                if (timedAspects[i].currentCyclePercent <= 0)
+                {
+                    timedAspects[i].cycleCompleted = false;
+                }
+            }
+            else
+            {
+                if (!timedAspects[i].cycleCompleted)
+                {
+                    timedAspects[i].currentCyclePercent += Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
+                    // currentCyclePercent is a fraction equaling Time.deltaTime divided by the number of IRL seconds
+                    // required to reach the number of in-game time intervals needed to reach the cycleSpeed
+                }
 
-                case 2:         // the aspect has a Back and Forth cycle
-                    if (!timedAspects[i].cycleCompleted)
-                    {                                                                                                                                       
-                        timedAspects[i].currentCyclePercent += Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
-                        // currentCyclePercent is a fraction equaling Time.deltaTime divided by the number of IRL seconds
-                        // required to reach the number of in-game time intervals needed to reach the cycleSpeed
-                    }
-                    else
-                    {
-                        timedAspects[i].currentCyclePercent -= Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
-                    }
-
-                    if(timedAspects[i].currentCyclePercent >= 1)
-                    {
-                        timedAspects[i].cycleCompleted = true;
-                    }
-
-                    if (timedAspects[i].currentCyclePercent <= 0)
-                    {
-                        timedAspects[i].cycleCompleted = false;
-                    }
-                    break;
-
-                default:
-                    break;
+                if (timedAspects[i].currentCyclePercent >= 1)
+                {
+                    timedAspects[i].cycleCompleted = true;
+                }
             }
 
             if (timedAspects[i].hasSlider)  // helps avoid extra errors within Unity for not assigning a slider
             {
                 timedAspects[i].currentPercentSlider.value = timedAspects[i].currentCyclePercent;
+            }
+
+            if (timedAspects[i].isOcean)
+            {
+                if (!timedAspects[i].backAndForth)
+                {
+                    timedAspects[i].backAndForth = true;
+                }
+                timedAspects[i].currentTide = timedAspects[i].currentCyclePercent * (timedAspects[i].highTide - timedAspects[i].lowTide) + timedAspects[i].lowTide;
+                Vector3 tempVec = new Vector3(0.0f, timedAspects[i].currentTide, 0.0f);
+                timedAspects[i].transform.position = tempVec;
             }
         }
     }

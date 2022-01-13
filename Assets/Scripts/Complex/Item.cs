@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class Item : MonoBehaviour
 {
+    [HorizontalLine(color: EColor.Red)]
     [Header("Basics")]
+
     public string itemName; // the display name for the item
     public enum ItemType
     {
@@ -20,6 +23,7 @@ public class Item : MonoBehaviour
     public ItemType type;
     public float cost;
 
+    [HorizontalLine(color: EColor.Red)]
     [Header("Damage Types")]
     public float attack;
     public float destruction;
@@ -31,13 +35,28 @@ public class Item : MonoBehaviour
     };
     public DamageSpecialty specialty;
 
+    [HorizontalLine(color: EColor.Red)]
     [Header("Food")]
     public float foodVal;
     public float drinkVal;
-    public bool canBePlanted;
-    public int growthStage;
 
+    [HorizontalLine(color: EColor.Red)]
+    [Header ("Crops")]
+    public bool canBePlanted;
+    public int currentGrowthStage;
+    public GameObject[] growthStages;
+    public float growthSpeed;
+
+    [HorizontalLine(color: EColor.Red)]
     [Header("Crafting")]
     public bool canBeCrafted;
     public int craftLvlRequired;
+
+    public void Grow()
+    {
+        if(currentGrowthStage < growthStages.Length)
+        {
+            currentGrowthStage++;
+        }
+    }
 }
