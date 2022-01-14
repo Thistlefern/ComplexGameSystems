@@ -61,6 +61,59 @@ public class WorldTimer : MonoBehaviour
 
         for(int i = 0; i < timedAspects.Length; i++)
         {
+            if (timedAspects[i].hasSlider)  // helps avoid extra errors within Unity for not assigning a slider
+            {
+                timedAspects[i].currentPercentSlider.value = timedAspects[i].currentCyclePercent;
+            }
+            
+            if (timedAspects[i].isSun)
+            {
+                if (!timedAspects[i].goAgain)
+                {
+                    timedAspects[i].goAgain = true;
+                }
+
+                if (timedAspects[i].nightTime)
+                {
+                    if (timedAspects[i].currentTide >= timedAspects[i].dayStart && timedAspects[i].currentTide < timedAspects[i].dayEnd)
+                    {
+                        timedAspects[i].nightTime = false;
+                        timedAspects[i].cycleSpeed = timedAspects[i].daySpeed;
+                    }
+                }
+                else
+                {
+                    if (timedAspects[i].currentTide >= timedAspects[i].dayEnd)
+                    {
+                        timedAspects[i].nightTime = true;
+                        timedAspects[i].cycleSpeed = timedAspects[i].nightSpeed;
+                    }
+                }
+
+                if (timedAspects[i].nightTime)
+                {
+                    timedAspects[i].currentTide = timedAspects[i].currentCyclePercent * 720;
+                }
+                else
+                {
+                    timedAspects[i].currentTide = timedAspects[i].currentCyclePercent * 720;
+                }
+                
+                Vector3 tempVec = new Vector3(timedAspects[i].currentTide, -30.0f, 0.0f);
+                timedAspects[i].transform.rotation = Quaternion.Euler(tempVec);
+            }
+
+            if (timedAspects[i].isOcean)
+            {
+                if (!timedAspects[i].backAndForth)
+                {
+                    timedAspects[i].backAndForth = true;
+                }
+                timedAspects[i].currentTide = timedAspects[i].currentCyclePercent * (timedAspects[i].highTide - timedAspects[i].lowTide) + timedAspects[i].lowTide;
+                Vector3 tempVec = new Vector3(0.0f, timedAspects[i].currentTide, 0.0f);
+                timedAspects[i].transform.position = tempVec;
+            }
+
             if (timedAspects[i].backAndForth)   // the aspect has a Back and Forth cycle
             {
                 if (!timedAspects[i].cycleCompleted)
@@ -84,6 +137,25 @@ public class WorldTimer : MonoBehaviour
                     timedAspects[i].cycleCompleted = false;
                 }
             }
+            else if (timedAspects[i].goAgain)
+            {
+                if (timedAspects[i].currentCyclePercent >= 1)
+                {
+                    timedAspects[i].cycleCompleted = true;
+                }
+
+                if (!timedAspects[i].cycleCompleted)
+                {
+                    timedAspects[i].currentCyclePercent += Time.deltaTime / (((60 / gameTimeInterval) * timedAspects[i].cycleSpeed) * intervalLength);
+                    // currentCyclePercent is a fraction equaling Time.deltaTime divided by the number of IRL seconds
+                    // required to reach the number of in-game time intervals needed to reach the cycleSpeed
+                }
+                else
+                {
+                    timedAspects[i].currentCyclePercent = 0;
+                    timedAspects[i].cycleCompleted = false;
+                }
+            }
             else
             {
                 if (!timedAspects[i].cycleCompleted)
@@ -97,22 +169,6 @@ public class WorldTimer : MonoBehaviour
                 {
                     timedAspects[i].cycleCompleted = true;
                 }
-            }
-
-            if (timedAspects[i].hasSlider)  // helps avoid extra errors within Unity for not assigning a slider
-            {
-                timedAspects[i].currentPercentSlider.value = timedAspects[i].currentCyclePercent;
-            }
-
-            if (timedAspects[i].isOcean)
-            {
-                if (!timedAspects[i].backAndForth)
-                {
-                    timedAspects[i].backAndForth = true;
-                }
-                timedAspects[i].currentTide = timedAspects[i].currentCyclePercent * (timedAspects[i].highTide - timedAspects[i].lowTide) + timedAspects[i].lowTide;
-                Vector3 tempVec = new Vector3(0.0f, timedAspects[i].currentTide, 0.0f);
-                timedAspects[i].transform.position = tempVec;
             }
         }
     }
