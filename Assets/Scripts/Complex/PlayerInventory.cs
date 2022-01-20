@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Item[] allPossibleItems;
+    public Item[] itemSlots;
+    public UI ui;
+
     void Start()
     {
-        
+        itemSlots = new Item[ui.inventorySlots.Length];
     }
 
-    // Update is called once per frame
     void Update()
     {
         

@@ -1,7 +1,19 @@
 fileFormatVersion: 2
 guid: 0e5b4882ceddff74d90442f1578ab47a
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -3698475495538814905
+    second: path_stone_NW_0
+  - first:
+      213: -4921542779035341338
+    second: path_stone_NW_1
+  - first:
+      213: -462581413692066487
+    second: path_stone_NW_2
+  - first:
+      213: 5965113599876575506
+    second: path_stone_NW_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -41,7 +53,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -135,7 +147,28 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: path_stone_NW_1
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 152
+        width: 93
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eda5bcfaea23bbb0800000000000000
+      internalID: -4921542779035341338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []

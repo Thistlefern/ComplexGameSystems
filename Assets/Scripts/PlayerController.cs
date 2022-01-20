@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 m_Rotation;
     private Vector2 m_Move;
     private Vector2 m_Jump;
+    private Vector2 m_Select;
 
     public bool hasJumped;
     public bool isFalling;
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rbody;
     public Collider collider;
     public Animator animator;
+
+    public PlayerInventory inventory;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -40,6 +43,10 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsJumping", true);
     }
 
+    public void OnSelect(InputAction.CallbackContext context)
+    {
+        m_Select = context.ReadValue<Vector2>();
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (hasJumped && collision.collider.tag == "Ground")
@@ -48,11 +55,63 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log(other.GetComponent<Item>().itemName);
+
+        // Action required pickup
+        //Debug.Log("Press E to pick up " + other.GetComponent<Item>().itemName);
+
+        // Auto pickup
+        // Destroy(other.gameObject);
+        int count = 0;
+        int firstEmpty = 0;
+        bool firstEmptyFound = false;
+
+        for(int i = 0; i < inventory.itemSlots.Length; i++)
+        {
+            if (inventory.itemSlots[i] != null)
+            {
+                if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
+                {
+                    Debug.Log(i + 1);   // if you already have one, add the one picked up to that slot
+                    return;
+                }
+                else
+                {
+                    count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
+                }
+            }
+            else
+            {
+                count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
+                if (!firstEmptyFound)   // keep track of the first empty slot that the player has
+                {
+                    firstEmptyFound = true;
+                    firstEmpty = i;
+                }
+            }
+        }
+
+        if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+        {
+            if (!firstEmptyFound)
+            {
+                Debug.Log("No room!");  // if there is no empty slot, display a message
+            }
+            else
+            {
+                Debug.Log("First empty slot: slot " + firstEmpty);  // if there is an empty slot, put this new item there
+            }
+        }
+    }
+
     public void Update()
     {
         Move(m_Move);
         Rotate(m_Rotation);
         Jump(m_Jump);
+        SelectItem(m_Select);
 
         // Debug.Log(rbody.velocity.y);
     }
@@ -104,5 +163,10 @@ public class PlayerController : MonoBehaviour
             hasJumped = true;
             animator.SetBool("IsJumping", true);
         }
+    }
+
+    private void SelectItem(Vector2 direction)
+    {
+        
     }
 }
