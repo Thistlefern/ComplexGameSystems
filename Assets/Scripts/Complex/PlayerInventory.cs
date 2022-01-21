@@ -44,6 +44,7 @@ public class PlayerInventory : MonoBehaviour
                 if (other.GetComponent<Item>().itemName == itemSlots[i].itemName) // check all slots for the item being picked up
                 {
                     slotToAddTo = i + 1;   // if you already have one, select the slot it is in
+                    Debug.Log("This will be added to the stack in slot " + slotToAddTo);
                     return;
                 }
                 else
@@ -58,6 +59,7 @@ public class PlayerInventory : MonoBehaviour
                 {
                     firstEmptyFound = true;
                     firstEmpty = i;
+                    Debug.Log("First empty slot: " + firstEmpty);
                 }
             }
         }
@@ -73,6 +75,8 @@ public class PlayerInventory : MonoBehaviour
                 slotToAddTo = firstEmpty + 1;  // if there is an empty slot, select that slot
             }
         }
+
+        Debug.Log("Slot to add to: " + slotToAddTo);
     }
 
     private void OnTriggerExit(Collider other)
@@ -80,6 +84,8 @@ public class PlayerInventory : MonoBehaviour
         itemInRange = false;
         item = null;
         slotToAddTo = 0;
+        firstEmptyFound = false;
+        count = 0;
     }
 
     public void PickUpItem()
@@ -92,16 +98,18 @@ public class PlayerInventory : MonoBehaviour
                 {
                     if (allPossibleItems[i].itemName == item.GetComponent<Item>().itemName)
                     {
-                        itemSlots[slotToAddTo] = allPossibleItems[i];
+                        itemSlots[slotToAddTo - 1] = allPossibleItems[i];
+                        itemQuantities[slotToAddTo - 1]++;
                     }
                 }
             }
 
             itemInRange = false;
+            slotToAddTo = 0;
+            firstEmptyFound = false;
+            count = 0;
             Destroy(item);
             item = null;
-            slotToAddTo = 0;
         }
-
     }
 }

@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["Interact"].performed -= InputInteract;
     }
 
-    private void InputJump(InputAction.CallbackContext obj)
+    public void InputJump(InputAction.CallbackContext obj)
     {
         if (!hasJumped)
         {
@@ -65,7 +65,8 @@ public class PlayerController : MonoBehaviour
             hasJumped = true;
             animator.SetBool("IsJumping", true);
         }
-    }private void InputInteract(InputAction.CallbackContext obj)
+    }
+    public void InputInteract(InputAction.CallbackContext obj)
     {
         inventory.PickUpItem();
     }
