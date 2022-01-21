@@ -56573,20 +56573,12 @@ MonoBehaviour:
     m_ActionId: b95586a0-070d-404d-b7bf-f8608042638a
     m_ActionName: PlayerControls/New action
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1639728196}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnJump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 433a4ddc-46b8-4ea7-80c7-4f56a50b0ee1
+    m_ActionName: PlayerControls/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 514a2692-ee30-4b56-a2f4-b5d867cb3f56
     m_ActionName: PlayerControls/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
@@ -56623,6 +56615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f1f3827274a3534b9a31aa70b107a63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 1639728194}
   moveSpeed: 3.5
   rotateSpeed: 80
   jumpHeight: 3

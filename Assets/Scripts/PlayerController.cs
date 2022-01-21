@@ -42,15 +42,22 @@ public class PlayerController : MonoBehaviour
         if (hasJumped && collision.collider.CompareTag("Ground"))
         {
             hasJumped = false;
+            animator.SetBool("IsJumping", false);
         }
     }
 
     private void OnEnable()
     {
-        input.currentActionMap["Jump"].performed += inputJump;
+        input.currentActionMap["Jump"].performed += InputJump;  // TODO* maybe change all input to this later but it works for now (remember to clean up if you add things here)
+        input.currentActionMap["Interact"].performed += InputInteract;
+    }
+    private void OnDisable()
+    {
+        input.currentActionMap["Jump"].performed -= InputJump;
+        input.currentActionMap["Interact"].performed -= InputInteract;
     }
 
-    private void inputJump(InputAction.CallbackContext obj)
+    private void InputJump(InputAction.CallbackContext obj)
     {
         if (!hasJumped)
         {
@@ -58,11 +65,9 @@ public class PlayerController : MonoBehaviour
             hasJumped = true;
             animator.SetBool("IsJumping", true);
         }
-    }
-
-    private void OnDisable()
+    }private void InputInteract(InputAction.CallbackContext obj)
     {
-        input.currentActionMap["Jump"].performed -= inputJump;
+        Debug.Log("pick up thing");
     }
 
     public void Update()
