@@ -25,7 +25,7 @@ public class UI : MonoBehaviour
     {
         if (playerInventory.itemInRange)
         {
-            pickupText.text = "Press E to pick up ITEM";
+            pickupText.text = "Press E to pick up " + playerInventory.item.GetComponent<Item>().itemName;
         }
         else
         {

@@ -46854,7 +46854,13 @@ MonoBehaviour:
   - {fileID: 1452807962}
   - {fileID: 637965208}
   - {fileID: 1676070506}
-  inventoryQuantities: []
+  inventoryQuantities:
+  - {fileID: 1164782345}
+  - {fileID: 374318386}
+  - {fileID: 1578156736}
+  - {fileID: 307345118}
+  - {fileID: 1250163408}
+  - {fileID: 524980304}
   pickupText: {fileID: 1964816058}
   playerInventory: {fileID: 1639728195}
   selectedItem: 0
@@ -56597,11 +56603,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1621558cee85b04fa762fdbf96d0a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allPossibleItems: []
+  allPossibleItems:
+  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
+  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
+  - {fileID: 2180347304832311373, guid: abb5a3f439f65ef47b382472c2b40eb9, type: 3}
+  - {fileID: 834663565807865890, guid: 01513ab3ebd5e934b8f72fa47f6ac4d5, type: 3}
   itemSlots: []
+  itemQuantities: 
   maxItems: 6
-  ui: {fileID: 0}
+  ui: {fileID: 1339547730}
   itemInRange: 0
+  item: {fileID: 0}
   noRoom: 0
 --- !u!114 &1639728196
 MonoBehaviour:

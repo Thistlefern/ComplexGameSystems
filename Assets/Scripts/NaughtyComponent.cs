@@ -8,5 +8,5 @@ public class NaughtyComponent : MonoBehaviour
     [Dropdown("StringValues")]
     public string stringValue;
 
-    private List<string> StringValues { get { return new List<string>() { "Go Until", "Back and Forth" }; } }   // TODO- add any other types of cycles here
+    private List<string> StringValues { get { return new List<string>() { "Go Until", "Back and Forth" }; } }   // Add any other types of cycles here
 }

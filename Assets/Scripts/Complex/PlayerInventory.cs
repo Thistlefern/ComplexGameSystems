@@ -1,32 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
     public Item[] allPossibleItems;
     public Item[] itemSlots;
+    public int[] itemQuantities;
     public int maxItems;
 
     public UI ui;
     public bool itemInRange;
+    public GameObject item;
     public bool noRoom;
+    int count;
+    int firstEmpty;
+    bool firstEmptyFound;
+    public int slotToAddTo;
 
     void Start()
     {
         itemSlots = new Item[maxItems];
+        itemQuantities = new int[maxItems];
+
         itemInRange = false;
+        item = null;
+        count = 0;
+        firstEmpty = 0;
+        firstEmptyFound = false;
+        slotToAddTo = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         itemInRange = true;
-
-        // Auto pickup
-        // Destroy(other.gameObject);
-        int count = 0;
-        int firstEmpty = 0;
-        bool firstEmptyFound = false;
+        item = other.gameObject;
 
         for (int i = 0; i < itemSlots.Length; i++)
         {
@@ -34,7 +43,7 @@ public class PlayerInventory : MonoBehaviour
             {
                 if (other.GetComponent<Item>().itemName == itemSlots[i].itemName) // check all slots for the item being picked up
                 {
-                    Debug.Log(i + 1);   // if you already have one, add the one picked up to that slot
+                    slotToAddTo = i + 1;   // if you already have one, select the slot it is in
                     return;
                 }
                 else
@@ -61,7 +70,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                Debug.Log("First empty slot: slot " + firstEmpty);  // if there is an empty slot, put this new item there
+                slotToAddTo = firstEmpty + 1;  // if there is an empty slot, select that slot
             }
         }
     }
@@ -69,5 +78,30 @@ public class PlayerInventory : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         itemInRange = false;
+        item = null;
+        slotToAddTo = 0;
+    }
+
+    public void PickUpItem()
+    {
+        if (itemInRange)
+        {
+            if (slotToAddTo != 0)
+            {
+                for (int i = 0; i < allPossibleItems.Length; i++)
+                {
+                    if (allPossibleItems[i].itemName == item.GetComponent<Item>().itemName)
+                    {
+                        itemSlots[slotToAddTo] = allPossibleItems[i];
+                    }
+                }
+            }
+
+            itemInRange = false;
+            Destroy(item);
+            item = null;
+            slotToAddTo = 0;
+        }
+
     }
 }

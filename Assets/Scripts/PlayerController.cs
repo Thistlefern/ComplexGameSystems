@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
         }
     }private void InputInteract(InputAction.CallbackContext obj)
     {
-        Debug.Log("pick up thing");
+        inventory.PickUpItem();
     }
 
     public void Update()
