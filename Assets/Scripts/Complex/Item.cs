@@ -9,7 +9,7 @@ public class Item : MonoBehaviour
     #region basics
     [Header("Basics")]
     public string itemName;     // the display name for the item
-    public Sprite itemimage;    // the image that will be displayed in the player's inventory when they have this item
+    public Sprite itemImage;    // the image that will be displayed in the player's inventory when they have this item
     public enum ItemType    // list of item types
     {
         SELECT,

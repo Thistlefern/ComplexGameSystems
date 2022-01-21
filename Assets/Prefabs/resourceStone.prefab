@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: stone
-  itemimage: {fileID: -396366537408681630, guid: 29980997984a62147b4922a3a3839779, type: 3}
+  itemImage: {fileID: -396366537408681630, guid: 29980997984a62147b4922a3a3839779, type: 3}
   type: 1
   cost: 0
   attack: 0

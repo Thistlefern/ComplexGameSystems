@@ -5,8 +5,8 @@ using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public Item[] allPossibleItems;
-    public Item[] itemSlots;
+    public Item[] allPossibleItems; // fill this array with the prefabs for every item. Might be a good idea to seperate this from the player if you have a large amount of possible items to pick up.
+    public Item[] itemSlots;        // this will fill
     public int[] itemQuantities;
     public int maxItems;
 
@@ -44,7 +44,6 @@ public class PlayerInventory : MonoBehaviour
                 if (other.GetComponent<Item>().itemName == itemSlots[i].itemName) // check all slots for the item being picked up
                 {
                     slotToAddTo = i + 1;   // if you already have one, select the slot it is in
-                    Debug.Log("This will be added to the stack in slot " + slotToAddTo);
                     return;
                 }
                 else
@@ -59,7 +58,6 @@ public class PlayerInventory : MonoBehaviour
                 {
                     firstEmptyFound = true;
                     firstEmpty = i;
-                    Debug.Log("First empty slot: " + firstEmpty);
                 }
             }
         }
@@ -75,8 +73,6 @@ public class PlayerInventory : MonoBehaviour
                 slotToAddTo = firstEmpty + 1;  // if there is an empty slot, select that slot
             }
         }
-
-        Debug.Log("Slot to add to: " + slotToAddTo);
     }
 
     private void OnTriggerExit(Collider other)
@@ -104,6 +100,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
 
+            ui.AddItem();
             itemInRange = false;
             slotToAddTo = 0;
             firstEmptyFound = false;
@@ -111,5 +108,10 @@ public class PlayerInventory : MonoBehaviour
             Destroy(item);
             item = null;
         }
+    }
+
+    public void Sort()
+    {
+
     }
 }

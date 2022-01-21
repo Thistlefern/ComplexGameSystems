@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4298488451064972488}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemName: pickaxe
-  itemimage: {fileID: -1652381702838184501, guid: b07ca094db5a4d94094ffe8d3ff4b047, type: 3}
+  itemImage: {fileID: -1652381702838184501, guid: b07ca094db5a4d94094ffe8d3ff4b047, type: 3}
   type: 2
   cost: 0
   attack: 0
