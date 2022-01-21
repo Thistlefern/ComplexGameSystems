@@ -4,24 +4,25 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerInput input;
+
     public float moveSpeed;
     public float rotateSpeed;
     public float jumpHeight;
 
     private Vector2 m_Rotation;
     private Vector2 m_Move;
-    private Vector2 m_Jump;
-    private Vector2 m_Select;
 
     public bool hasJumped;
     public bool isFalling;
     public float storedRot;
 
     public Rigidbody rbody;
-    public Collider collider;
+    public new Collider collider;
     public Animator animator;
 
     public PlayerInventory inventory;
@@ -36,84 +37,38 @@ public class PlayerController : MonoBehaviour
     {
         m_Rotation = context.ReadValue<Vector2>();
     }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        m_Jump = context.ReadValue<Vector2>();
-        animator.SetBool("IsJumping", true);
-    }
-
-    public void OnSelect(InputAction.CallbackContext context)
-    {
-        m_Select = context.ReadValue<Vector2>();
-    }
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasJumped && collision.collider.tag == "Ground")
+        if (hasJumped && collision.collider.CompareTag("Ground"))
         {
             hasJumped = false;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnEnable()
     {
-        //Debug.Log(other.GetComponent<Item>().itemName);
+        input.currentActionMap["Jump"].performed += inputJump;
+    }
 
-        // Action required pickup
-        //Debug.Log("Press E to pick up " + other.GetComponent<Item>().itemName);
-
-        // Auto pickup
-        // Destroy(other.gameObject);
-        int count = 0;
-        int firstEmpty = 0;
-        bool firstEmptyFound = false;
-
-        for(int i = 0; i < inventory.itemSlots.Length; i++)
+    private void inputJump(InputAction.CallbackContext obj)
+    {
+        if (!hasJumped)
         {
-            if (inventory.itemSlots[i] != null)
-            {
-                if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
-                {
-                    Debug.Log(i + 1);   // if you already have one, add the one picked up to that slot
-                    return;
-                }
-                else
-                {
-                    count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
-                }
-            }
-            else
-            {
-                count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
-                if (!firstEmptyFound)   // keep track of the first empty slot that the player has
-                {
-                    firstEmptyFound = true;
-                    firstEmpty = i;
-                }
-            }
+            rbody.AddForce(0, jumpHeight, 0, ForceMode.Impulse);
+            hasJumped = true;
+            animator.SetBool("IsJumping", true);
         }
+    }
 
-        if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
-        {
-            if (!firstEmptyFound)
-            {
-                Debug.Log("No room!");  // if there is no empty slot, display a message
-            }
-            else
-            {
-                Debug.Log("First empty slot: slot " + firstEmpty);  // if there is an empty slot, put this new item there
-            }
-        }
+    private void OnDisable()
+    {
+        input.currentActionMap["Jump"].performed -= inputJump;
     }
 
     public void Update()
     {
         Move(m_Move);
         Rotate(m_Rotation);
-        Jump(m_Jump);
-        SelectItem(m_Select);
-
-        // Debug.Log(rbody.velocity.y);
     }
 
     private void Move(Vector2 direction)    // TODO* change to velocity instead of transform.position
@@ -148,25 +103,5 @@ public class PlayerController : MonoBehaviour
         Vector2 tempVec = new Vector2(0.0f, m_Rotation.y);
         transform.localEulerAngles = tempVec;
         storedRot = m_Rotation.y;
-    }
-
-    private void Jump(Vector2 direction)
-    {
-        if (direction.sqrMagnitude < 0.01)
-        {
-            animator.SetBool("IsJumping", false);
-            return;
-        }
-        if (!hasJumped)
-        {
-            rbody.AddForce(0, jumpHeight * direction.y, 0, ForceMode.Impulse);
-            hasJumped = true;
-            animator.SetBool("IsJumping", true);
-        }
-    }
-
-    private void SelectItem(Vector2 direction)
-    {
-        
     }
 }

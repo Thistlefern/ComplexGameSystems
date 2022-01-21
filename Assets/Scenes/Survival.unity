@@ -46854,7 +46854,10 @@ MonoBehaviour:
   - {fileID: 1452807962}
   - {fileID: 637965208}
   - {fileID: 1676070506}
-  pickupText: {fileID: 0}
+  inventoryQuantities: []
+  pickupText: {fileID: 1964816058}
+  playerInventory: {fileID: 1639728195}
+  selectedItem: 0
 --- !u!114 &1339547731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56524,7 +56527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: a60bd39b90259a64fb96c569ed4abc02, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 4a8da25a22528e24986e7cfa54fa6b57, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -56551,24 +56554,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: e522fe4f-e3be-4a28-a804-642b97c4cd48
-    m_ActionName: Gameplay/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1639728196}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnJump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 2ee31020-a3f1-44a8-a3ec-2bbc6f3b43bb
-    m_ActionName: Gameplay/Jump[/Keyboard/space]
+    m_ActionId: 9af5aef0-ce42-4841-86d9-7d8e6f76d360
+    m_ActionName: PlayerControls/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1639728196}
@@ -56583,11 +56570,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: e568c3e2-9f2f-42a8-a31b-1554d067146d
-    m_ActionName: Gameplay/Rotate[/Keyboard/a,/Keyboard/d]
+    m_ActionId: b95586a0-070d-404d-b7bf-f8608042638a
+    m_ActionName: PlayerControls/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1639728196}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 433a4ddc-46b8-4ea7-80c7-4f56a50b0ee1
+    m_ActionName: PlayerControls/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Gameplay
+  m_DefaultActionMap: PlayerControls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &1639728195
@@ -56604,7 +56607,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allPossibleItems: []
   itemSlots: []
-  ui: {fileID: 1339547730}
+  maxItems: 6
+  ui: {fileID: 0}
+  itemInRange: 0
+  noRoom: 0
 --- !u!114 &1639728196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66994,7 +67000,7 @@ GameObject:
   - component: {fileID: 1964816059}
   - component: {fileID: 1964816058}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PickupText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67016,8 +67022,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -859.62, y: -490}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 0, y: -205}
+  m_SizeDelta: {x: 1980, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1964816058
 MonoBehaviour:
@@ -67039,7 +67045,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Pickup Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -67066,15 +67072,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 70
+  m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
