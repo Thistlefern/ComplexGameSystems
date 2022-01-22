@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 m_Rotation;
     private Vector2 m_Move;
+    private float m_Select;
 
     public bool hasJumped;
     public bool isFalling;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
 
     public PlayerInventory inventory;
+    public UI uI;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -36,6 +38,11 @@ public class PlayerController : MonoBehaviour
     public void OnRotate(InputAction.CallbackContext context)
     {
         m_Rotation = context.ReadValue<Vector2>();
+    }
+
+    public void OnSelect(InputAction.CallbackContext context)
+    {
+        m_Select = context.ReadValue<float>();
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -50,11 +57,13 @@ public class PlayerController : MonoBehaviour
     {
         input.currentActionMap["Jump"].performed += InputJump;  // TODO* maybe change all input to this later but it works for now (remember to clean up if you add things here)
         input.currentActionMap["Interact"].performed += InputInteract;
+        input.currentActionMap["Sort"].performed += InputSort;
     }
     private void OnDisable()
     {
         input.currentActionMap["Jump"].performed -= InputJump;
         input.currentActionMap["Interact"].performed -= InputInteract;
+        input.currentActionMap["Sort"].performed -= InputSort;
     }
 
     public void InputJump(InputAction.CallbackContext obj)
@@ -71,10 +80,16 @@ public class PlayerController : MonoBehaviour
         inventory.PickUpItem();
     }
 
+    public void InputSort(InputAction.CallbackContext obj)
+    {
+        inventory.Sort();
+    }
+
     public void Update()
     {
         Move(m_Move);
         Rotate(m_Rotation);
+        Select(m_Select);
     }
 
     private void Move(Vector2 direction)    // TODO* change to velocity instead of transform.position
@@ -109,5 +124,20 @@ public class PlayerController : MonoBehaviour
         Vector2 tempVec = new Vector2(0.0f, m_Rotation.y);
         transform.localEulerAngles = tempVec;
         storedRot = m_Rotation.y;
+    }
+
+    private void Select(float direction)
+    {
+        if(direction != 0)
+        {
+            if(direction < 0)
+            {
+                uI.SelectDown();
+            }
+            else
+            {
+                uI.SelectUp();
+            }
+        }
     }
 }

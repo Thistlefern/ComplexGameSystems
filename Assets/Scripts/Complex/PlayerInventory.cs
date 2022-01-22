@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerInventory : MonoBehaviour
 {
     public Item[] allPossibleItems; // fill this array with the prefabs for every item. Might be a good idea to seperate this from the player if you have a large amount of possible items to pick up.
-    public Item[] itemSlots;        // this will fill
+    public Item[] itemSlots;
     public int[] itemQuantities;
     public int maxItems;
 
@@ -19,6 +19,8 @@ public class PlayerInventory : MonoBehaviour
     bool firstEmptyFound;
     public int slotToAddTo;
 
+    public int selectedItem;
+
     void Start()
     {
         itemSlots = new Item[maxItems];
@@ -30,6 +32,8 @@ public class PlayerInventory : MonoBehaviour
         firstEmpty = 0;
         firstEmptyFound = false;
         slotToAddTo = 0;
+
+        selectedItem = 0;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -110,8 +114,51 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    void BubbleSort(Item[] array)
+    {
+        // Copied an old bubble sort I did in year 1
+        bool sorted = false;
+        while (!sorted)
+        {
+            sorted = true;
+            for (int s = 0; s < array.Length - 1; ++s) // TODO Analysis part 1: isn't this already doing what is asked?
+            {
+                if (array[s].sortID > array[s + 1].sortID)
+                {
+                    Item tmp = array[s];
+                    array[s] = array[s + 1];
+                    array[s + 1] = tmp;
+                    sorted = false;
+                }
+            }
+        }
+    }
+
     public void Sort()
     {
+        for (int i = 0; i < maxItems; i++)
+        {
+            if (itemSlots[i] != null)
+            {
+                for (int j = 0; j < allPossibleItems.Length; j++)
+                {
+                    if (allPossibleItems[j].name == itemSlots[i].name)
+                    {
+                        itemSlots[i].sortID = j;
+                    }
+                }
+            }
 
+            if (itemSlots[i] != null)
+            {
+                Debug.Log("Slot " + i + ": " + itemSlots[i].sortID);
+            }
+            else
+            {
+                Debug.Log("Slot " + i + ": empty");
+            }
+        }
+
+        BubbleSort(itemSlots);
     }
 }

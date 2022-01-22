@@ -10,6 +10,7 @@ public class Item : MonoBehaviour
     [Header("Basics")]
     public string itemName;     // the display name for the item
     public Sprite itemImage;    // the image that will be displayed in the player's inventory when they have this item
+    public int sortID;          // the number assigned to this item so that it can be sorted
     public enum ItemType    // list of item types
     {
         SELECT,

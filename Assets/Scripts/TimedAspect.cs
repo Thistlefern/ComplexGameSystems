@@ -35,7 +35,6 @@ public class TimedAspect : MonoBehaviour
     [HorizontalLine(color: EColor.Red)]
     public bool grows;
 
-
     void Start()
     {
         currentCyclePercent = 0;

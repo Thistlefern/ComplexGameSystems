@@ -58,4 +58,39 @@ public class UI : MonoBehaviour
 
         inventoryQuantities[playerInventory.slotToAddTo - 1].text = playerInventory.itemQuantities[playerInventory.slotToAddTo - 1].ToString();
     }
+
+    //public void UpdateSprites()
+    //{
+    //    for(int i = 0; i < playerInventory.maxItems; i++)
+    //    {
+    //        inventorySlots[playerInventory.slotToAddTo - 1].sprite = playerInventory.itemSlots[playerInventory.slotToAddTo - 1].itemImage;
+    //    }
+    //}
+
+    public void SelectUp()
+    {
+        selectIndicators[selectedItem].SetActive(false);
+        if(selectedItem == inventorySlots.Length - 1)
+        {
+            selectedItem = 0;
+        }
+        else
+        {
+            selectedItem++;
+        }
+        selectIndicators[selectedItem].SetActive(true);
+    }
+    public void SelectDown()
+    {
+        selectIndicators[selectedItem].SetActive(false);
+        if (selectedItem == 0)
+        {
+            selectedItem = inventorySlots.Length - 1;
+        }
+        else
+        {
+            selectedItem--;
+        }
+        selectIndicators[selectedItem].SetActive(true);
+    }
 }
