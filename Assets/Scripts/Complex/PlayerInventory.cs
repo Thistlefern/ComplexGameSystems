@@ -18,6 +18,7 @@ public class PlayerInventory : MonoBehaviour
     int firstEmpty;
     bool firstEmptyFound;
     public int slotToAddTo;
+    public bool invFull;
 
     public int selectedItem;
 
@@ -32,6 +33,7 @@ public class PlayerInventory : MonoBehaviour
         firstEmpty = 0;
         firstEmptyFound = false;
         slotToAddTo = 0;
+        invFull = false;
 
         selectedItem = 0;
     }
@@ -70,7 +72,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (!firstEmptyFound)
             {
-                Debug.Log("No room!");  // if there is no empty slot, display a message
+                invFull = true;
             }
             else
             {
@@ -92,44 +94,31 @@ public class PlayerInventory : MonoBehaviour
     {
         if (itemInRange)
         {
-            if (slotToAddTo != 0)
+            if (invFull)
             {
-                for (int i = 0; i < allPossibleItems.Length; i++)
+                Debug.Log("Inventory is full");
+            }
+            else
+            {
+                if (slotToAddTo != 0)
                 {
-                    if (allPossibleItems[i].itemName == item.GetComponent<Item>().itemName)
+                    for (int i = 0; i < allPossibleItems.Length; i++)
                     {
-                        itemSlots[slotToAddTo - 1] = allPossibleItems[i];
-                        itemQuantities[slotToAddTo - 1]++;
+                        if (allPossibleItems[i].itemName == item.GetComponent<Item>().itemName)
+                        {
+                            itemSlots[slotToAddTo - 1] = allPossibleItems[i];
+                            itemQuantities[slotToAddTo - 1]++;
+                        }
                     }
                 }
-            }
 
-            ui.AddItem();
-            itemInRange = false;
-            slotToAddTo = 0;
-            firstEmptyFound = false;
-            count = 0;
-            Destroy(item);
-            item = null;
-        }
-    }
-
-    void BubbleSort(Item[] array)
-    {
-        // Copied an old bubble sort I did in year 1
-        bool sorted = false;
-        while (!sorted)
-        {
-            sorted = true;
-            for (int s = 0; s < array.Length - 1; ++s) // TODO Analysis part 1: isn't this already doing what is asked?
-            {
-                if (array[s].sortID > array[s + 1].sortID)
-                {
-                    Item tmp = array[s];
-                    array[s] = array[s + 1];
-                    array[s + 1] = tmp;
-                    sorted = false;
-                }
+                ui.AddItem();
+                itemInRange = false;
+                slotToAddTo = 0;
+                firstEmptyFound = false;
+                count = 0;
+                Destroy(item);
+                item = null;
             }
         }
     }
@@ -148,17 +137,74 @@ public class PlayerInventory : MonoBehaviour
                     }
                 }
             }
+        }
 
-            if (itemSlots[i] != null)
+        BubbleSort(itemSlots, itemQuantities);
+    }
+
+    void BubbleSort(Item[] items, int[] quantities)
+    {
+        bool toTheLeft = false;
+        bool sorted = false;
+
+        while (!toTheLeft)
+        {
+            int sortCount = 0;
+            
+            for(int s = 0; s < (maxItems - 1); s++)
             {
-                Debug.Log("Slot " + i + ": " + itemSlots[i].sortID);
+                if(items[s] == null && items[s+1] != null)
+                {
+                    items[s] = items[s+1];
+                    items[s + 1] = null;
+                }
+                else
+                {
+                    sortCount++;
+                }
             }
-            else
+
+            if(sortCount == (maxItems - 1))
             {
-                Debug.Log("Slot " + i + ": empty");
+                for(int d = 0; d < maxItems; d++)
+                {
+                    ui.UpdateSpritesAndQuantities(d);
+                }
+                toTheLeft = true;
             }
         }
 
-        BubbleSort(itemSlots);
+        while (!sorted)
+        {
+            int sortCount = 0;
+
+            for (int s = 0; s < (maxItems - 1); s++)
+            {
+                if (items[s] != null && items[s + 1] != null && items[s].sortID > items[s + 1].sortID)
+                {
+                    Item tmp = items[s];
+                    int tmp2 = quantities[s];
+
+                    items[s] = items[s + 1];
+                    quantities[s] = quantities[s + 1];
+                    
+                    items[s + 1] = tmp;
+                    quantities[s + 1] = tmp2;
+                }
+                else
+                {
+                    sortCount++;
+                }
+            }
+
+            if (sortCount == (maxItems - 1))
+            {
+                for (int d = 0; d < maxItems; d++)
+                {
+                    ui.UpdateSpritesAndQuantities(d);
+                }
+                sorted = true;
+            }
+        }
     }
 }

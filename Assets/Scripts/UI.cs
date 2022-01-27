@@ -14,6 +14,9 @@ public class UI : MonoBehaviour
     public GameObject[] selectIndicators;
     public int selectedItem;
 
+    public GameObject craftingMenu;
+    public bool currentlyCrafting;
+
     private void Start()
     {
         selectedItem = 0;
@@ -32,6 +35,9 @@ public class UI : MonoBehaviour
         {
             Debug.LogError("Mismatched number of inventory slots: UI has space for " + inventorySlots.Length + " items, while player inventory has space to hold " + playerInventory.maxItems + " items.");
         }
+
+        craftingMenu.SetActive(false);
+        currentlyCrafting = false;
     }
 
     private void Update()
@@ -59,13 +65,17 @@ public class UI : MonoBehaviour
         inventoryQuantities[playerInventory.slotToAddTo - 1].text = playerInventory.itemQuantities[playerInventory.slotToAddTo - 1].ToString();
     }
 
-    //public void UpdateSprites()
-    //{
-    //    for(int i = 0; i < playerInventory.maxItems; i++)
-    //    {
-    //        inventorySlots[playerInventory.slotToAddTo - 1].sprite = playerInventory.itemSlots[playerInventory.slotToAddTo - 1].itemImage;
-    //    }
-    //}
+    public void UpdateSpritesAndQuantities(int number)
+    {
+        for (int i = 0; i < playerInventory.maxItems; i++)
+        {
+            if(playerInventory.itemSlots[number] != null)
+            {
+                inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
+                inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
+            }                                                                                           // the quantity will show as 0.
+        }
+    }
 
     public void SelectUp()
     {

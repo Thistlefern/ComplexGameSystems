@@ -58,12 +58,14 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["Jump"].performed += InputJump;  // TODO* maybe change all input to this later but it works for now (remember to clean up if you add things here)
         input.currentActionMap["Interact"].performed += InputInteract;
         input.currentActionMap["Sort"].performed += InputSort;
+        input.currentActionMap["Craft"].performed += InputCraft;
     }
     private void OnDisable()
     {
         input.currentActionMap["Jump"].performed -= InputJump;
         input.currentActionMap["Interact"].performed -= InputInteract;
         input.currentActionMap["Sort"].performed -= InputSort;
+        input.currentActionMap["Craft"].performed -= InputCraft;
     }
 
     public void InputJump(InputAction.CallbackContext obj)
@@ -83,6 +85,20 @@ public class PlayerController : MonoBehaviour
     public void InputSort(InputAction.CallbackContext obj)
     {
         inventory.Sort();
+    }
+
+    public void InputCraft(InputAction.CallbackContext obj)
+    {
+        if (uI.currentlyCrafting)
+        {
+            uI.craftingMenu.SetActive(false);
+            uI.currentlyCrafting = false;
+        }
+        else
+        {
+            uI.craftingMenu.SetActive(true);
+            uI.currentlyCrafting = true;
+        }
     }
 
     public void Update()
