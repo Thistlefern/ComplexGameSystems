@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     public void InputJump(InputAction.CallbackContext obj)
     {
-        if (!hasJumped)
+        if (!hasJumped && !uI.currentlyCrafting)
         {
             rbody.AddForce(0, jumpHeight, 0, ForceMode.Impulse);
             hasJumped = true;
@@ -92,20 +92,39 @@ public class PlayerController : MonoBehaviour
         if (uI.currentlyCrafting)
         {
             uI.craftingMenu.SetActive(false);
+            uI.invPanel.SetActive(true);
+            uI.pickupText.gameObject.SetActive(true);
             uI.currentlyCrafting = false;
         }
         else
         {
             uI.craftingMenu.SetActive(true);
+            uI.invPanel.SetActive(false);
+            uI.pickupText.gameObject.SetActive(false);
             uI.currentlyCrafting = true;
+        }
+    }
+
+    private void Start()
+    {
+        for(int i = 0; i < inventory.craftableItems.Length; i++)
+        {
+            inventory.craftableItems[i].player = inventory;
         }
     }
 
     public void Update()
     {
-        Move(m_Move);
-        Rotate(m_Rotation);
-        Select(m_Select);
+        if (!uI.currentlyCrafting)
+        {
+            Move(m_Move);
+            Rotate(m_Rotation);
+            Select(m_Select);
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
+        }
     }
 
     private void Move(Vector2 direction)    // TODO* change to velocity instead of transform.position

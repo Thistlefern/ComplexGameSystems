@@ -5,10 +5,12 @@ using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public Item[] allPossibleItems; // fill this array with the prefabs for every item. Might be a good idea to seperate this from the player if you have a large amount of possible items to pick up.
+    public Item[] allPossibleItems;     // fill this array with the prefabs for every item. Might be a good idea to seperate this from the player if you have a large amount of possible items to pick up.
+    public Recipe[] craftableItems;
     public Item[] itemSlots;
     public int[] itemQuantities;
     public int maxItems;
+    public int currentRecipes;
 
     public UI ui;
     public bool itemInRange;
@@ -22,11 +24,34 @@ public class PlayerInventory : MonoBehaviour
 
     public int selectedItem;
 
-    void Start()
+    public Crafting crafting;
+
+    private void Awake()
     {
         itemSlots = new Item[maxItems];
         itemQuantities = new int[maxItems];
 
+        for (int i = 0; i < allPossibleItems.Length; i++)   // this can be adjusted later to include only recipes of a certain level, and can be called again when that crafting leverl increases to increase the number of available recipes
+        {
+            if (allPossibleItems[i].GetComponent<Recipe>())
+            {
+                currentRecipes++;
+            }
+        }
+        craftableItems = new Recipe[currentRecipes];
+        int tmp = 0;
+        for (int i = 0; i < allPossibleItems.Length; i++)
+        {
+            if (allPossibleItems[i].GetComponent<Recipe>())
+            {
+                craftableItems[tmp] = allPossibleItems[i].gameObject.GetComponent<Recipe>();
+                tmp++;
+            }
+        }
+    }
+
+    void Start()
+    {
         itemInRange = false;
         item = null;
         count = 0;
@@ -88,6 +113,21 @@ public class PlayerInventory : MonoBehaviour
         slotToAddTo = 0;
         firstEmptyFound = false;
         count = 0;
+    }
+
+    public void TestFunction()
+    {
+        if (crafting.CanCraftCheck(0))
+        {
+            itemSlots[5] = craftableItems[0].gameObject.GetComponent<Item>();
+            itemQuantities[0] -= 2;
+            itemQuantities[1] -= 2;
+            itemQuantities[5]++;
+            for(int i = 0; i < itemSlots.Length; i++)
+            {
+                ui.UpdateSpritesAndQuantities(i);
+            }
+        }
     }
 
     public void PickUpItem()

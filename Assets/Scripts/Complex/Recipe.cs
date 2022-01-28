@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Recipe : MonoBehaviour
 {
-    Item[] components;
-    bool canBuild;
-
-
+    public Item[] components;
+    public int[] componentQuantities;
+    public PlayerInventory player;
 }

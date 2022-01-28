@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9254692242037771}
   - component: {fileID: 2865439856325519553}
   - component: {fileID: 2180347304832311373}
+  - component: {fileID: 473716502977157634}
   m_Layer: 0
   m_Name: toolAxe
   m_TagString: Untagged
@@ -98,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: axe
   itemImage: {fileID: -791158388615435876, guid: 47d60a4bda6be5d419767a5fcda7c09d, type: 3}
+  sortID: 0
   type: 2
   cost: 0
   attack: 0
@@ -111,3 +113,19 @@ MonoBehaviour:
   growthSpeed: 0
   canBeCrafted: 1
   craftLvlRequired: 0
+--- !u!114 &473716502977157634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4378882221791562004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58969305f03503c41af66170dc721ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
+  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
+  componentQuantities: 0300000002000000

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
+    public GameObject invPanel;
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
     public TMP_Text pickupText;
@@ -16,6 +17,8 @@ public class UI : MonoBehaviour
 
     public GameObject craftingMenu;
     public bool currentlyCrafting;
+
+    public Dropdown dropdown;
 
     private void Start()
     {
@@ -36,6 +39,8 @@ public class UI : MonoBehaviour
             Debug.LogError("Mismatched number of inventory slots: UI has space for " + inventorySlots.Length + " items, while player inventory has space to hold " + playerInventory.maxItems + " items.");
         }
 
+        invPanel.SetActive(true);
+        pickupText.gameObject.SetActive(true);
         craftingMenu.SetActive(false);
         currentlyCrafting = false;
     }

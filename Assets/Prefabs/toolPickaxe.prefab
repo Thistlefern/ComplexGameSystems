@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 523340326478778839}
   - component: {fileID: 2353042882932729117}
   - component: {fileID: 834663565807865890}
+  - component: {fileID: 4078188749205060628}
   m_Layer: 0
   m_Name: toolPickaxe
   m_TagString: Untagged
@@ -97,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: pickaxe
   itemImage: {fileID: -1652381702838184501, guid: b07ca094db5a4d94094ffe8d3ff4b047, type: 3}
+  sortID: 0
   type: 2
   cost: 0
   attack: 0
@@ -110,3 +112,19 @@ MonoBehaviour:
   growthSpeed: 0
   canBeCrafted: 1
   craftLvlRequired: 0
+--- !u!114 &4078188749205060628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4298488451064972488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58969305f03503c41af66170dc721ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
+  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
+  componentQuantities: 0300000002000000
