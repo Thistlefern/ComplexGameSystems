@@ -8,27 +8,6 @@ public class Crafting : MonoBehaviour
     public bool canBuild;
     public PlayerInventory player;
 
-    //private void Start()
-    //{
-    //    canBuild = false;
-
-    //    for (int i = 0; i < player.craftableItems.Length; i++)
-    //    {
-    //        if (player.craftableItems[i].components.Length != player.craftableItems[i].componentQuantities.Length)
-    //        {
-    //            Debug.LogError(gameObject.name + " discrepency with crafting requirements. Has " + player.craftableItems[i].components.Length + " components, and " + player.craftableItems[i].componentQuantities.Length + " component quantities listed.");
-    //        }
-
-    //        componentCheck = new bool[player.craftableItems[i].components.Length];
-    //        for (int j = 0; j < componentCheck.Length; j++)
-    //        {
-    //            componentCheck[j] = false;
-    //        }
-
-    //        Debug.Log(player.craftableItems[i].name + " needs " + player.craftableItems[i].componentQuantities[0] + " " + player.craftableItems[i].components[0].itemName + " and " + player.craftableItems[i].componentQuantities[1] + " " + player.craftableItems[i].components[1].itemName);
-    //    }
-    //}
-
     public bool CanCraftCheck(int number)
     {
         canBuild = false;
@@ -44,7 +23,7 @@ public class Crafting : MonoBehaviour
             componentCheck[j] = false;
         }
 
-        // Debug.Log(player.craftableItems[number].name + " needs " + player.craftableItems[number].componentQuantities[0] + " " + player.craftableItems[number].components[0].itemName + " and " + player.craftableItems[number].componentQuantities[1] + " " + player.craftableItems[number].components[1].itemName);
+        Debug.Log(player.craftableItems[number].name + " needs " + player.craftableItems[number].componentQuantities[0] + " " + player.craftableItems[number].components[0].itemName + " and " + player.craftableItems[number].componentQuantities[1] + " " + player.craftableItems[number].components[1].itemName);
 
         int tmp = 0;        // temporary placeholder for counting the number of components that you have enough of said resource
         int invCheck = 0;   // counts how many empty slots the player has
@@ -97,8 +76,8 @@ public class Crafting : MonoBehaviour
         return canBuild;
     }
 
-    //public void Craft()
-    //{
+    public void Craft()
+    {
 
-    //}
+    }
 }

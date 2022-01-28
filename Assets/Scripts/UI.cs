@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UI : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class UI : MonoBehaviour
     public GameObject craftingMenu;
     public bool currentlyCrafting;
 
-    public Dropdown dropdown;
+    public TMP_Dropdown dropdown;
+    public List<string> dropdownOptions;
 
     private void Start()
     {
@@ -43,6 +45,13 @@ public class UI : MonoBehaviour
         pickupText.gameObject.SetActive(true);
         craftingMenu.SetActive(false);
         currentlyCrafting = false;
+
+        for(int i = 0; i < playerInventory.craftableItems.Length; i++)
+        {
+            dropdownOptions.Add(playerInventory.craftableItems[i].GetComponent<Item>().itemName);
+        }
+        dropdown.ClearOptions();
+        dropdown.AddOptions(dropdownOptions);
     }
 
     private void Update()
@@ -108,4 +117,19 @@ public class UI : MonoBehaviour
         }
         selectIndicators[selectedItem].SetActive(true);
     }
+
+    //public void CraftUI()
+    //{
+    //    for(int i = 0; i < playerInventory.craftableItems.Length; i++)
+    //    {
+    //        if(playerInventory.craftableItems[i].GetComponent<Item>().itemName == dropdown.captionText.text)
+    //        {
+    //            for(int j = 0; j < playerInventory.craftableItems[i].GetComponent<Recipe>().components.Length; j++)
+    //            {
+    //                Debug.Log(playerInventory.craftableItems[i].GetComponent<Recipe>().components[j]);
+    //                Debug.Log(playerInventory.craftableItems[i].GetComponent<Recipe>().componentQuantities[j]);
+    //            }
+    //        }
+    //    }
+    //}
 }
