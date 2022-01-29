@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
 
     public PlayerInventory inventory;
     public UI uI;
+    public Crafting craftScript;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["Interact"].performed += InputInteract;
         input.currentActionMap["Sort"].performed += InputSort;
         input.currentActionMap["Craft"].performed += InputCraft;
+        input.currentActionMap["NoUICraft"].performed += InputNoUICraft;
     }
     private void OnDisable()
     {
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["Interact"].performed -= InputInteract;
         input.currentActionMap["Sort"].performed -= InputSort;
         input.currentActionMap["Craft"].performed -= InputCraft;
+        input.currentActionMap["NoUICraft"].performed -= InputNoUICraft;
     }
 
     public void InputJump(InputAction.CallbackContext obj)
@@ -103,6 +106,11 @@ public class PlayerController : MonoBehaviour
             uI.pickupText.gameObject.SetActive(false);
             uI.currentlyCrafting = true;
         }
+    }
+
+    public void InputNoUICraft(InputAction.CallbackContext obj)
+    {
+        craftScript.Craft();
     }
 
     private void Start()

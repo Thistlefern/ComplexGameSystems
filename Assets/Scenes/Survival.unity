@@ -22944,6 +22944,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636684977}
+  - component: {fileID: 636684978}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -22969,6 +22970,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &636684978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636684976}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31818983efd650843b7916f8bc1a88a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldTimer: 0
+  intervalLength: 5
+  gameTimeInterval: 15
+  timeText: {fileID: 1964816058}
+  timedAspects:
+  - {fileID: 1112200257}
 --- !u!1 &637965208
 GameObject:
   m_ObjectHideFlags: 0
@@ -31213,7 +31232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 112.28}
+  m_AnchoredPosition: {x: -0.00091553, y: 77.8}
   m_SizeDelta: {x: 700, y: 224.55402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &892950852
@@ -33188,8 +33207,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00094604, y: 332.3}
-  m_SizeDelta: {x: 1219.998, y: 215.49231}
+  m_AnchoredPosition: {x: 0, y: 298.3}
+  m_SizeDelta: {x: 1219.998, y: 216.37073}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &942098599
 MonoBehaviour:
@@ -36503,9 +36522,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1339547730}
-        m_TargetAssemblyTypeName: UI, Assembly-CSharp
-        m_MethodName: CraftUI
+      - m_Target: {fileID: 1339547732}
+        m_TargetAssemblyTypeName: Crafting, Assembly-CSharp
+        m_MethodName: Craft
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -48495,7 +48514,6 @@ GameObject:
   - component: {fileID: 1339547727}
   - component: {fileID: 1339547726}
   - component: {fileID: 1339547730}
-  - component: {fileID: 1339547731}
   - component: {fileID: 1339547732}
   m_Layer: 5
   m_Name: Canvas
@@ -48615,6 +48633,7 @@ MonoBehaviour:
   - {fileID: 524980304}
   pickupText: {fileID: 1964816058}
   playerInventory: {fileID: 1639728195}
+  nullSprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   selectIndicators:
   - {fileID: 2007218817}
   - {fileID: 1899652825}
@@ -48625,26 +48644,9 @@ MonoBehaviour:
   selectedItem: 0
   craftingMenu: {fileID: 1773263747}
   currentlyCrafting: 0
+  craftingScript: {fileID: 1339547732}
   dropdown: {fileID: 892950852}
   dropdownOptions: []
---- !u!114 &1339547731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339547725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31818983efd650843b7916f8bc1a88a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  worldTimer: 0
-  intervalLength: 5
-  gameTimeInterval: 15
-  timeText: {fileID: 1964816058}
-  timedAspects:
-  - {fileID: 1112200257}
 --- !u!114 &1339547732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48660,6 +48662,8 @@ MonoBehaviour:
   componentCheck: 
   canBuild: 0
   player: {fileID: 1639728195}
+  craftID: 1
+  ui: {fileID: 0}
 --- !u!1001 &1342688735
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58534,6 +58538,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 06cb6b54-6df1-4405-9dde-ee5b61708669
     m_ActionName: PlayerControls/Test[/Keyboard/backslash]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1639728196}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: InputNoUICraft
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 42bb9e09-121a-466f-8c12-b0291e54cbd6
+    m_ActionName: PlayerControls/NoUICraft[/Keyboard/slash]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerControls
@@ -58565,6 +58585,8 @@ MonoBehaviour:
   itemInRange: 0
   item: {fileID: 0}
   noRoom: 0
+  firstEmpty: 0
+  firstEmptyFound: 0
   slotToAddTo: 0
   invFull: 0
   selectedItem: 0
@@ -58593,6 +58615,7 @@ MonoBehaviour:
   animator: {fileID: 1639728193}
   inventory: {fileID: 1639728195}
   uI: {fileID: 1339547730}
+  craftScript: {fileID: 1339547732}
 --- !u!54 &1639728197
 Rigidbody:
   m_ObjectHideFlags: 0

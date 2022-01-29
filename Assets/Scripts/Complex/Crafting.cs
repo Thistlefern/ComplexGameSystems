@@ -7,6 +7,9 @@ public class Crafting : MonoBehaviour
     public bool[] componentCheck;
     public bool canBuild;
     public PlayerInventory player;
+    public int craftID;
+
+    public UI ui;
 
     public bool CanCraftCheck(int number)
     {
@@ -22,8 +25,6 @@ public class Crafting : MonoBehaviour
         {
             componentCheck[j] = false;
         }
-
-        Debug.Log(player.craftableItems[number].name + " needs " + player.craftableItems[number].componentQuantities[0] + " " + player.craftableItems[number].components[0].itemName + " and " + player.craftableItems[number].componentQuantities[1] + " " + player.craftableItems[number].components[1].itemName);
 
         int tmp = 0;        // temporary placeholder for counting the number of components that you have enough of said resource
         int invCheck = 0;   // counts how many empty slots the player has
@@ -69,7 +70,6 @@ public class Crafting : MonoBehaviour
 
         if (tmp == componentCheck.Length)
         {
-            Debug.Log("Can craft");
             canBuild = true;
         }
 
@@ -78,6 +78,48 @@ public class Crafting : MonoBehaviour
 
     public void Craft()
     {
+        if(ui != null)
+        {
+            ui.SelectItemToCraftUI();
+        }
 
+        CanCraftCheck(craftID); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
+
+        if (canBuild)
+        {
+            // Debug.Log("Ye");
+
+            for(int i = 0; i < player.itemSlots.Length; i++)
+            {
+                if(player.itemSlots[i] != null)
+                {
+                    for (int j = 0; j < player.craftableItems[craftID].components.Length; j++)
+                    {
+                        if (player.itemSlots[i].itemName == player.craftableItems[craftID].components[j].itemName)
+                        {
+                            player.itemQuantities[i] -= player.craftableItems[craftID].componentQuantities[j];
+                        }
+                    }
+                }
+            }
+
+            player.FindFirstEmpty();
+
+            player.itemSlots[player.firstEmpty] = player.craftableItems[craftID].GetComponent<Item>();
+            player.itemQuantities[player.firstEmpty]++;
+            player.firstEmptyFound = false;
+
+            if (ui != null)
+            {
+                for (int d = 0; d < player.maxItems; d++)
+                {
+                    ui.UpdateSpritesAndQuantities(d);
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("Nyet");
+        }
     }
 }

@@ -17,8 +17,8 @@ public class PlayerInventory : MonoBehaviour
     public GameObject item;
     public bool noRoom;
     int count;
-    int firstEmpty;
-    bool firstEmptyFound;
+    public int firstEmpty;
+    public bool firstEmptyFound;
     public int slotToAddTo;
     public bool invFull;
 
@@ -117,15 +117,31 @@ public class PlayerInventory : MonoBehaviour
 
     public void TestFunction()
     {
-        if (crafting.CanCraftCheck(0))
+        Debug.Log("Use this for testing a function.");
+    }
+
+    public void FindFirstEmpty()
+    {
+        firstEmptyFound = false;
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            itemSlots[5] = craftableItems[0].gameObject.GetComponent<Item>();
-            itemQuantities[0] -= 2;
-            itemQuantities[1] -= 2;
-            itemQuantities[5]++;
-            for(int i = 0; i < itemSlots.Length; i++)
+            if (itemSlots[i] == null || itemQuantities[i] == 0)
             {
-                ui.UpdateSpritesAndQuantities(i);
+                firstEmptyFound = true;
+                firstEmpty = i;
+                return;
+            }
+            else
+            {
+                count++;
+            }
+        }
+
+        if (count == itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+        {
+            if (!firstEmptyFound)
+            {
+                invFull = true;
             }
         }
     }
@@ -206,10 +222,14 @@ public class PlayerInventory : MonoBehaviour
 
             if(sortCount == (maxItems - 1))
             {
-                for(int d = 0; d < maxItems; d++)
+                if(ui != null)
                 {
-                    ui.UpdateSpritesAndQuantities(d);
+                    for (int d = 0; d < maxItems; d++)
+                    {
+                        ui.UpdateSpritesAndQuantities(d);
+                    }
                 }
+
                 toTheLeft = true;
             }
         }
@@ -239,10 +259,14 @@ public class PlayerInventory : MonoBehaviour
 
             if (sortCount == (maxItems - 1))
             {
-                for (int d = 0; d < maxItems; d++)
+                if (ui != null)
                 {
-                    ui.UpdateSpritesAndQuantities(d);
+                    for (int d = 0; d < maxItems; d++)
+                    {
+                        ui.UpdateSpritesAndQuantities(d);
+                    }
                 }
+
                 sorted = true;
             }
         }

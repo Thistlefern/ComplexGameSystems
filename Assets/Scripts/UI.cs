@@ -12,12 +12,14 @@ public class UI : MonoBehaviour
     public TMP_Text[] inventoryQuantities;
     public TMP_Text pickupText;
     public PlayerInventory playerInventory;
+    public Sprite nullSprite;
 
     public GameObject[] selectIndicators;
     public int selectedItem;
 
     public GameObject craftingMenu;
     public bool currentlyCrafting;
+    public Crafting craftingScript;
 
     public TMP_Dropdown dropdown;
     public List<string> dropdownOptions;
@@ -88,6 +90,14 @@ public class UI : MonoBehaviour
                 inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
                 inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
             }                                                                                           // the quantity will show as 0.
+
+            if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+            {
+                //Debug.Log("Slot " + i + " is empty");
+                //Debug.Log(inventorySlots[i].sprite.name);
+                inventorySlots[i].sprite = nullSprite;
+                inventoryQuantities[i].text = "";
+            }
         }
     }
 
@@ -118,18 +128,17 @@ public class UI : MonoBehaviour
         selectIndicators[selectedItem].SetActive(true);
     }
 
-    //public void CraftUI()
-    //{
-    //    for(int i = 0; i < playerInventory.craftableItems.Length; i++)
-    //    {
-    //        if(playerInventory.craftableItems[i].GetComponent<Item>().itemName == dropdown.captionText.text)
-    //        {
-    //            for(int j = 0; j < playerInventory.craftableItems[i].GetComponent<Recipe>().components.Length; j++)
-    //            {
-    //                Debug.Log(playerInventory.craftableItems[i].GetComponent<Recipe>().components[j]);
-    //                Debug.Log(playerInventory.craftableItems[i].GetComponent<Recipe>().componentQuantities[j]);
-    //            }
-    //        }
-    //    }
-    //}
+    public void SelectItemToCraftUI()
+    {
+        for (int i = 0; i < playerInventory.craftableItems.Length; i++)
+        {
+            if (playerInventory.craftableItems[i].GetComponent<Item>().itemName == dropdown.captionText.text)
+            {
+                if (playerInventory.craftableItems[i].GetComponent<Item>().itemName == dropdown.captionText.text)
+                {
+                    craftingScript.craftID = i;
+                }
+            }
+        }
+    }
 }
