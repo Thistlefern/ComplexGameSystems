@@ -31232,7 +31232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00091553, y: 77.8}
+  m_AnchoredPosition: {x: 0, y: 80}
   m_SizeDelta: {x: 700, y: 224.55402}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &892950852
@@ -48662,8 +48662,8 @@ MonoBehaviour:
   componentCheck: 
   canBuild: 0
   player: {fileID: 1639728195}
-  craftID: 1
-  ui: {fileID: 0}
+  craftID: 0
+  ui: {fileID: 1339547730}
 --- !u!1001 &1342688735
 PrefabInstance:
   m_ObjectHideFlags: 0

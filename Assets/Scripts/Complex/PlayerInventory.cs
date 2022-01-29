@@ -5,6 +5,9 @@ using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
+    // TODO can drop item
+    // TODO can use tools
+
     public Item[] allPossibleItems;     // fill this array with the prefabs for every item. Might be a good idea to seperate this from the player if you have a large amount of possible items to pick up.
     public Recipe[] craftableItems;
     public Item[] itemSlots;
