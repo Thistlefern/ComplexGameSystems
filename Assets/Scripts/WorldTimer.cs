@@ -50,7 +50,7 @@ public class WorldTimer : MonoBehaviour
             worldTimer = 0;
 
             if (currentMinute < 10)     // TODO* maybe adjust to not include 'Time:'
-            {                           // TODO adjust from 24hr clock/have the option for either
+            {                           // TODO* adjust from 24hr clock/have the option for either
                 timeText.text = "Time: " + currentHour + ":0" + currentMinute;
             }
             else
