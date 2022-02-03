@@ -92,19 +92,23 @@ public class PlayerController : MonoBehaviour
 
     public void InputCraft(InputAction.CallbackContext obj)
     {
-        if (uI.currentlyCrafting)
+        if(uI != null)
         {
-            uI.craftingMenu.SetActive(false);
-            uI.invPanel.SetActive(true);
-            uI.pickupText.gameObject.SetActive(true);
-            uI.currentlyCrafting = false;
-        }
-        else
-        {
-            uI.craftingMenu.SetActive(true);
-            uI.invPanel.SetActive(false);
-            uI.pickupText.gameObject.SetActive(false);
-            uI.currentlyCrafting = true;
+            if (uI.currentlyCrafting)
+            {
+                uI.craftingMenu.SetActive(false);
+                uI.invPanel.SetActive(true);
+                uI.pickupText.gameObject.SetActive(true);
+                uI.currentlyCrafting = false;
+            }
+            else
+            {
+                uI.craftingMenu.SetActive(true);
+                uI.invPanel.SetActive(false);
+                uI.pickupText.gameObject.SetActive(false);
+                uI.currentlyCrafting = true;
+                uI.CheckRequirementsUI(craftScript.craftID);
+            }
         }
     }
 
@@ -117,21 +121,30 @@ public class PlayerController : MonoBehaviour
     {
         for(int i = 0; i < inventory.craftableItems.Length; i++)
         {
-            inventory.craftableItems[i].player = inventory;
+            inventory.craftableItems[i].player = inventory; // TODO figure out why this is here
         }
     }
 
     public void Update()
     {
-        if (!uI.currentlyCrafting)
+        if(uI != null)
+        {
+            if (!uI.currentlyCrafting)
+            {
+                Move(m_Move);
+                Rotate(m_Rotation);
+                Select(m_Select);
+            }
+            else
+            {
+                animator.SetBool("IsMoving", false);
+            }
+        }
+        else
         {
             Move(m_Move);
             Rotate(m_Rotation);
             Select(m_Select);
-        }
-        else
-        {
-            animator.SetBool("IsMoving", false);
         }
     }
 

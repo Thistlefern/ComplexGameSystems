@@ -20,9 +20,13 @@ public class UI : MonoBehaviour
     public GameObject craftingMenu;
     public bool currentlyCrafting;
     public Crafting craftingScript;
+    public bool[] componentCheck;
 
     public TMP_Dropdown dropdown;
     public List<string> dropdownOptions;
+    public Image[] requirementSprites;
+    public GameObject[] requirementNotEnough;
+    public TMP_Text[] requirementQuantity;
 
     private void Start()
     {
@@ -66,6 +70,12 @@ public class UI : MonoBehaviour
         {
             pickupText.text = "";
         }
+    }
+
+    public void DropdownValueChanged(TMP_Dropdown change)
+    {
+        SelectItemToCraftUI();
+        CheckRequirementsUI(craftingScript.craftID);
     }
 
     public void AddItem()
@@ -137,6 +147,45 @@ public class UI : MonoBehaviour
                 if (playerInventory.craftableItems[i].GetComponent<Item>().itemName == dropdown.captionText.text)
                 {
                     craftingScript.craftID = i;
+                }
+            }
+        }
+    }
+
+    public void CheckRequirementsUI(int number)
+    {
+        for(int i = 0; i < requirementSprites.Length; i++)
+        {
+            requirementSprites[i].sprite = nullSprite;
+            requirementQuantity[i].text = "";
+        }
+
+        componentCheck = new bool[playerInventory.craftableItems[number].components.Length];
+        for (int j = 0; j < componentCheck.Length; j++)
+        {
+            componentCheck[j] = false;
+        }
+
+        for (int c = 0; c < playerInventory.itemSlots.Length; c++)
+        {
+            if (playerInventory.itemSlots[c] != null)
+            {
+                for (int i = 0; i < componentCheck.Length; i++)
+                {
+                    if (playerInventory.craftableItems[number].components[i].itemName == playerInventory.itemSlots[c].itemName)
+                    {
+                        if (playerInventory.craftableItems[number].componentQuantities[i] <= playerInventory.itemQuantities[c])
+                        {
+                            componentCheck[i] = true;
+                            Debug.Log("You have enough " + playerInventory.craftableItems[number].components[i].itemName);
+                            Debug.Log(number);
+                        }
+                        else
+                        {
+                            Debug.Log("Not enough " + playerInventory.craftableItems[number].components[i].itemName + " for " + playerInventory.craftableItems[number].name);
+                            Debug.Log(number);
+                        }
+                    }
                 }
             }
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Crafting : MonoBehaviour
 {
     public bool[] componentCheck;
-    public bool canBuild;
+    //public bool canBuild;
     public PlayerInventory player;
     public int craftID;
 
@@ -13,7 +13,7 @@ public class Crafting : MonoBehaviour
 
     public bool CanCraftCheck(int number)
     {
-        canBuild = false;
+        bool canBuild = false;
 
         if (player.craftableItems[number].components.Length != player.craftableItems[number].componentQuantities.Length)
         {
@@ -83,7 +83,7 @@ public class Crafting : MonoBehaviour
             ui.SelectItemToCraftUI();
         }
 
-        CanCraftCheck(craftID); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
+        bool canBuild = CanCraftCheck(craftID); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
 
         if (canBuild)
         {
