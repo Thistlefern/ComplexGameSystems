@@ -27,8 +27,15 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
 
     public PlayerInventory inventory;
-    public UI uI;
+    public UI ui;
     public Crafting craftScript;
+
+    public bool itemInRange;
+    public GameObject item;
+    public bool noRoom;
+    int count;
+
+    public Item[] resources;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -73,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
     public void InputJump(InputAction.CallbackContext obj)
     {
-        if (!hasJumped && !uI.currentlyCrafting)
+        if (!hasJumped && !ui.currentlyCrafting)
         {
             rbody.AddForce(0, jumpHeight, 0, ForceMode.Impulse);
             hasJumped = true;
@@ -82,7 +89,61 @@ public class PlayerController : MonoBehaviour
     }
     public void InputInteract(InputAction.CallbackContext obj)
     {
-        inventory.PickUpItem();
+        if(item != null)
+        {
+            if(item.GetComponent<Item>().type.ToString() == "Resource")
+            {
+                PickUpItem(item.GetComponent<Item>(), 1);
+            }
+            else if(item.GetComponent<Item>().type.ToString() == "Source")
+            {
+                switch (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
+                {
+                    case "stone":
+                        for(int i = 0; i < inventory.itemSlots.Length; i++)
+                        {
+                            if(inventory.itemSlots[i] != null)
+                            {
+                                if (inventory.itemSlots[i].itemName == "pickaxe")
+                                {
+                                    //for(int j = 0; j < inventory.itemSlots.Length; j++)
+                                    //{
+                                    //    if (inventory.itemSlots[j] != null)
+                                    //    {
+                                    //        if (item.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
+                                    //        {
+                                    //            inventory.slotToAddTo = j + 1;   // if you already have one, select the slot it is in
+                                    //            return;
+                                    //        }
+                                    //    }
+                                    //}
+                                    PickUpItem(resources[0], 3);
+                                    ui.UpdateSpritesAndQuantities(i);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    case "wood":
+                        for (int i = 0; i < inventory.itemSlots.Length; i++)
+                        {
+                            if (inventory.itemSlots[i] != null)
+                            {
+                                if (inventory.itemSlots[i].itemName == "axe")
+                                {
+                                    PickUpItem(resources[1], 3);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    case "grass":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public void InputSort(InputAction.CallbackContext obj)
@@ -92,44 +153,43 @@ public class PlayerController : MonoBehaviour
 
     public void InputCraft(InputAction.CallbackContext obj)
     {
-        if(uI != null)
+        if(ui != null)
         {
-            if (uI.currentlyCrafting)
+            if (ui.currentlyCrafting)
             {
-                uI.craftingMenu.SetActive(false);
-                uI.invPanel.SetActive(true);
-                uI.pickupText.gameObject.SetActive(true);
-                uI.currentlyCrafting = false;
+                ui.craftingMenu.SetActive(false);
+                ui.invPanel.SetActive(true);
+                ui.pickupText.gameObject.SetActive(true);
+                ui.currentlyCrafting = false;
             }
             else
             {
-                uI.craftingMenu.SetActive(true);
-                uI.invPanel.SetActive(false);
-                uI.pickupText.gameObject.SetActive(false);
-                uI.currentlyCrafting = true;
-                uI.CheckRequirementsUI(craftScript.craftID);
+                ui.craftingMenu.SetActive(true);
+                ui.invPanel.SetActive(false);
+                ui.pickupText.gameObject.SetActive(false);
+                ui.currentlyCrafting = true;
+                ui.CheckRequirementsUI(ui.craftID);
             }
         }
     }
 
     public void InputNoUICraft(InputAction.CallbackContext obj)
     {
-        craftScript.Craft();
+        craftScript.Craft(0);       // will always craft the item in slot 0, which in this case is an axe
     }
 
     private void Start()
     {
-        for(int i = 0; i < inventory.craftableItems.Length; i++)
-        {
-            inventory.craftableItems[i].player = inventory; // TODO figure out why this is here
-        }
+        itemInRange = false;
+        item = null;
+        count = 0;
     }
 
     public void Update()
     {
-        if(uI != null)
+        if(ui != null)
         {
-            if (!uI.currentlyCrafting)
+            if (!ui.currentlyCrafting)
             {
                 Move(m_Move);
                 Rotate(m_Rotation);
@@ -145,6 +205,91 @@ public class PlayerController : MonoBehaviour
             Move(m_Move);
             Rotate(m_Rotation);
             Select(m_Select);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        itemInRange = true;
+        item = other.gameObject;
+
+        for (int i = 0; i < inventory.itemSlots.Length; i++)
+        {
+            if (inventory.itemSlots[i] != null)
+            {
+                if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
+                {
+                    inventory.slotToAddTo = i + 1;   // if you already have one, select the slot it is in
+                    return;
+                }
+                else
+                {
+                    count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
+                }
+            }
+            else
+            {
+                count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
+                if (!inventory.firstEmptyFound)   // keep track of the first empty slot that the player has
+                {
+                    inventory.firstEmptyFound = true;
+                    inventory.firstEmpty = i;
+                }
+            }
+        }
+
+        if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+        {
+            if (!inventory.firstEmptyFound)
+            {
+                inventory.invFull = true;
+            }
+            else
+            {
+                inventory.slotToAddTo = inventory.firstEmpty + 1;  // if there is an empty slot, select that slot
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        itemInRange = false;
+        item = null;
+        inventory.slotToAddTo = 0;
+        inventory.firstEmptyFound = false;
+        count = 0;
+    }
+
+    public void PickUpItem(Item thing, int quant)
+    {
+        if (itemInRange)
+        {
+            if (inventory.invFull)
+            {
+                Debug.Log("Inventory is full");
+            }
+            else
+            {
+                if (inventory.slotToAddTo != 0)
+                {
+                    for (int i = 0; i < inventory.allPossibleItems.Length; i++)
+                    {
+                        if (inventory.allPossibleItems[i].itemName == thing.itemName)
+                        {
+                            inventory.itemSlots[inventory.slotToAddTo - 1] = inventory.allPossibleItems[i];
+                            inventory.itemQuantities[inventory.slotToAddTo - 1] += quant;
+                        }
+                    }
+                }
+
+                ui.AddItem();
+                itemInRange = false;
+                inventory.slotToAddTo = 0;
+                inventory.firstEmptyFound = false;
+                count = 0;
+                Destroy(item);
+                item = null;
+            }
         }
     }
 
@@ -188,11 +333,11 @@ public class PlayerController : MonoBehaviour
         {
             if(direction < 0)
             {
-                uI.SelectDown();
+                ui.SelectDown();
             }
             else
             {
-                uI.SelectUp();
+                ui.SelectUp();
             }
         }
     }

@@ -5,9 +5,7 @@ using UnityEngine;
 public class Crafting : MonoBehaviour
 {
     public bool[] componentCheck;
-    //public bool canBuild;
     public PlayerInventory player;
-    public int craftID;
 
     public UI ui;
 
@@ -39,12 +37,7 @@ public class Crafting : MonoBehaviour
                     {
                         if(player.craftableItems[number].componentQuantities[i] <= player.itemQuantities[c])
                         {
-                            componentCheck[i] = true;
-                            Debug.Log("You have enough " + player.craftableItems[number].components[i].itemName);
-                        }
-                        else
-                        {
-                            Debug.Log("Not enough " + player.craftableItems[number].components[i].itemName + " for " + player.craftableItems[number].name);
+                            componentCheck[i] = true;   // Player has enough of this item
                         }
                     }
                 }
@@ -53,11 +46,6 @@ public class Crafting : MonoBehaviour
             {
                 invCheck++;
             }
-        }
-
-        if (invCheck == player.itemSlots.Length)
-        {
-            Debug.Log("You have no items!");
         }
 
         for (int i = 0; i < componentCheck.Length; i++)
@@ -76,28 +64,26 @@ public class Crafting : MonoBehaviour
         return canBuild;
     }
 
-    public void Craft()
+    public void Craft(int number)
     {
         if(ui != null)
         {
             ui.SelectItemToCraftUI();
         }
 
-        bool canBuild = CanCraftCheck(craftID); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
+        bool canBuild = CanCraftCheck(number); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
 
         if (canBuild)
         {
-            // Debug.Log("Ye");
-
             for(int i = 0; i < player.itemSlots.Length; i++)
             {
                 if(player.itemSlots[i] != null)
                 {
-                    for (int j = 0; j < player.craftableItems[craftID].components.Length; j++)
+                    for (int j = 0; j < player.craftableItems[number].components.Length; j++)
                     {
-                        if (player.itemSlots[i].itemName == player.craftableItems[craftID].components[j].itemName)
+                        if (player.itemSlots[i].itemName == player.craftableItems[number].components[j].itemName)
                         {
-                            player.itemQuantities[i] -= player.craftableItems[craftID].componentQuantities[j];
+                            player.itemQuantities[i] -= player.craftableItems[number].componentQuantities[j];
                         }
                     }
                 }
@@ -105,7 +91,7 @@ public class Crafting : MonoBehaviour
 
             player.FindFirstEmpty();
 
-            player.itemSlots[player.firstEmpty] = player.craftableItems[craftID].GetComponent<Item>();
+            player.itemSlots[player.firstEmpty] = player.craftableItems[number].GetComponent<Item>();
             player.itemQuantities[player.firstEmpty]++;
             player.firstEmptyFound = false;
 
@@ -119,7 +105,7 @@ public class Crafting : MonoBehaviour
         }
         else
         {
-            Debug.Log("Nyet");
+            // Player cannot craft this item
         }
     }
 }

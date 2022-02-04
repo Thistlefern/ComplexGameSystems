@@ -6,5 +6,4 @@ public class Recipe : MonoBehaviour
 {
     public Item[] components;
     public int[] componentQuantities;
-    public PlayerInventory player;
 }

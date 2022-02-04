@@ -101,10 +101,11 @@ MonoBehaviour:
   itemImage: {fileID: -791158388615435876, guid: 47d60a4bda6be5d419767a5fcda7c09d, type: 3}
   sortID: 0
   type: 2
+  resourceType: {fileID: 0}
   cost: 0
   attack: 0
   destruction: 1
-  specialty: 1
+  specialty: 2
   foodVal: 0
   drinkVal: 0
   canBePlanted: 0

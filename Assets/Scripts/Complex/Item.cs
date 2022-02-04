@@ -14,16 +14,18 @@ public class Item : MonoBehaviour
     public enum ItemType    // list of item types
     {
         SELECT,
-        Resource,   // items that can be collected to use for recipes
-        Tool,       // items which can be used to complete tasks
-        Weapon,     // items which hurt enemies
-        Food,       // food items that don't have to be crafted
-        Meal,       // food items that require crafting
-        Drink,      // drink items
+        Resource,   // can be collected to use for recipes
+        Source,     // can be destroyed with tools to gain resources
+        Tool,       // can be used to complete tasks
+        Weapon,     // hurt enemies
+        Food,       // food that doesn't have to be crafted
+        Meal,       // food that requires crafting
+        Drink,      // drinks
         Seed,       // a seed for a crop, contains the growth stages for said crop except the final stage, which is then a food item
         Furniture   // self explanitory (includes workbenches)
     };
     public ItemType type;   // the item type assigned to THIS item
+    public GameObject resourceType; // if the item is a Source item, this is the type of Resource that it can yield by harvesting
 
     [Tooltip("Only needed if implementing a shopping/selling system.")]
     public float cost;  // how much the item costs
@@ -40,9 +42,9 @@ public class Item : MonoBehaviour
     public float destruction;   // how much damage the item does to the environment
     public enum DamageSpecialty // list of environment types that the item deals extra damage to (ex. an axe would deal extra damage to wood, but not to stone)
     {
-        None,
-        Wood,
-        Stone
+        noneone,
+        stone,
+        wood
     };
     public DamageSpecialty specialty;   // the type of environment that THIS item deals extra damage to
     // TODO# ideas to add: weapon range, weapon accuracy, degradation
