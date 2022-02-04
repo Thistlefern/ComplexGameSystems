@@ -95,44 +95,80 @@ public class PlayerController : MonoBehaviour
             {
                 PickUpItem(item.GetComponent<Item>(), 1);
             }
-            else if(item.GetComponent<Item>().type.ToString() == "Source")
+        }
+    }
+
+    public void InputUseTool(InputAction.CallbackContext obj)
+    {
+        Debug.Log("it works");
+        if (item != null)
+        {
+            if (item.GetComponent<Item>().type.ToString() == "Source")
             {
                 switch (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
                 {
                     case "stone":
-                        for(int i = 0; i < inventory.itemSlots.Length; i++)
+                        if (inventory.itemSlots[ui.selectedItem].itemName == "pickaxe")
                         {
-                            if(inventory.itemSlots[i] != null)
+                            int count = 0;
+                            for (int j = 0; j < inventory.itemSlots.Length; j++)
                             {
-                                if (inventory.itemSlots[i].itemName == "pickaxe")
+                                if (inventory.itemSlots[j] != null)
                                 {
-                                    //for(int j = 0; j < inventory.itemSlots.Length; j++)
-                                    //{
-                                    //    if (inventory.itemSlots[j] != null)
-                                    //    {
-                                    //        if (item.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
-                                    //        {
-                                    //            inventory.slotToAddTo = j + 1;   // if you already have one, select the slot it is in
-                                    //            return;
-                                    //        }
-                                    //    }
-                                    //}
+                                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
+                                    {
+                                        inventory.itemQuantities[j] += 3;
+                                        Destroy(item);
+                                        item = null;
+                                        ui.UpdateSpritesAndQuantities(j);
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    count++;
+                                }
+                                if (count == inventory.itemSlots.Length)
+                                {
                                     PickUpItem(resources[0], 3);
-                                    ui.UpdateSpritesAndQuantities(i);
-                                    break;
+                                    ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
                         }
                         break;
                     case "wood":
-                        for (int i = 0; i < inventory.itemSlots.Length; i++)
+                        if (inventory.itemSlots[ui.selectedItem].itemName == "axe")
                         {
-                            if (inventory.itemSlots[i] != null)
+                            int count = 0;
+                            for (int j = 0; j < inventory.itemSlots.Length; j++)
                             {
-                                if (inventory.itemSlots[i].itemName == "axe")
+                                if (inventory.itemSlots[j] != null)
+                                {
+                                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
+                                    {
+                                        inventory.itemQuantities[j] += 3;
+                                        Destroy(item);
+                                        item = null;
+                                        ui.UpdateSpritesAndQuantities(j);
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    count++;
+                                }
+                                if (count == inventory.itemSlots.Length)
                                 {
                                     PickUpItem(resources[1], 3);
-                                    break;
+                                    ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
                         }

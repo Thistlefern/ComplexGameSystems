@@ -23,6 +23,7 @@ public class PlayerInventory : MonoBehaviour
     public bool invFull;
 
     public UI ui;
+    public PlayerController controller;
 
     public int selectedItem;
 

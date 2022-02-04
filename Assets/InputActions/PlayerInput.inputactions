@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Harvest",
+                    "type": "Button",
+                    "id": "3c54dfd9-f5f9-48b4-afd9-1b95e80cfb4c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Select",
                     "type": "PassThrough",
                     "id": "43b63df0-871a-4ac8-9305-7626eacc2583",
@@ -241,6 +249,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "NoUICraft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4d485e2c-90b3-4d43-b05a-e1a05df94801",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Harvest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

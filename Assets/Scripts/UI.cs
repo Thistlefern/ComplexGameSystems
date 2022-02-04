@@ -66,14 +66,17 @@ public class UI : MonoBehaviour
     {
         if (playerController.itemInRange)
         {
-            if(playerController.item.GetComponent<Item>().type.ToString() == "Resource")
+            if(playerController.item != null)
             {
-                pickupText.text = "Press E to pick up " + playerController.item.GetComponent<Item>().itemName;
+                if (playerController.item.GetComponent<Item>().type.ToString() == "Resource")
+                {
+                    pickupText.text = "Press E to pick up " + playerController.item.GetComponent<Item>().itemName;
+                }
             }
-            else if(playerController.item.GetComponent<Item>().type.ToString() == "Source")
-            {
-                pickupText.text = "Press E to harvest " + playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName;
-            }
+            //else if(playerController.item.GetComponent<Item>().type.ToString() == "Source")
+            //{
+            //    pickupText.text = "Press E to harvest " + playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName;
+            //}
         }
         else
         {
