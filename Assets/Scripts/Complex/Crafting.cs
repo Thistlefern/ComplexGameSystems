@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Crafting : MonoBehaviour
 {
-    public bool[] componentCheck;
-    public PlayerInventory player;
+    public bool[] componentCheck;   // each bool becomes true if the player has enough of the item in that location of the Recipe Components array
+    public PlayerInventory player;  // checks the player's inventory for items to make sure that crafting can occur
 
-    public UI ui;
+    public UI ui;                   // NOT REQUIRED TO ASSIGN but please keep this here
 
     public bool CanCraftCheck(int number)
     {
