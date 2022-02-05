@@ -100,7 +100,6 @@ public class PlayerController : MonoBehaviour
 
     public void InputUseTool(InputAction.CallbackContext obj)
     {
-        Debug.Log("it works");
         if (item != null)
         {
             if (item.GetComponent<Item>().type.ToString() == "Source")
@@ -134,7 +133,7 @@ public class PlayerController : MonoBehaviour
                                 }
                                 if (count == inventory.itemSlots.Length)
                                 {
-                                    PickUpItem(resources[0], 3);
+                                    PickUpItem(resources[0], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
                                     ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
@@ -167,7 +166,7 @@ public class PlayerController : MonoBehaviour
                                 }
                                 if (count == inventory.itemSlots.Length)
                                 {
-                                    PickUpItem(resources[1], 3);
+                                    PickUpItem(resources[1], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
                                     ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
@@ -369,11 +368,11 @@ public class PlayerController : MonoBehaviour
         {
             if(direction < 0)
             {
-                ui.SelectDown();
+                ui.SelectUp();
             }
             else
             {
-                ui.SelectUp();
+                ui.SelectDown();
             }
         }
     }

@@ -72,11 +72,18 @@ public class UI : MonoBehaviour
                 {
                     pickupText.text = "Press E to pick up " + playerController.item.GetComponent<Item>().itemName;
                 }
+                else if (playerController.item.GetComponent<Item>().type.ToString() == "Source")
+                {
+                    if (playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == "stone")    // this implementation is messy but works for my sample scene where there are only two resources to harvest
+                    {
+                        pickupText.text = "Select pickaxe to harvest stone";
+                    }
+                    else
+                    {
+                        pickupText.text = "Select axe to harvest wood";
+                    }
+                }
             }
-            //else if(playerController.item.GetComponent<Item>().type.ToString() == "Source")
-            //{
-            //    pickupText.text = "Press E to harvest " + playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName;
-            //}
         }
         else
         {
