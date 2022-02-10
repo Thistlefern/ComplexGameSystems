@@ -7,6 +7,8 @@ using System.Linq;
 
 public class UI : MonoBehaviour
 {
+    // TODO* settings menu
+
     public GameObject invPanel;
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
@@ -29,6 +31,13 @@ public class UI : MonoBehaviour
     public Image[] requirementSprites;
     public GameObject[] requirementNotEnough;
     public TMP_Text[] requirementQuantity;
+
+    public GameObject pauseMenu;
+
+    public GameObject settingsMenu;
+    public bool inSettings;
+    public bool invertScroll;
+    public Slider rotationSlider;
 
     private void Start()
     {
@@ -53,6 +62,10 @@ public class UI : MonoBehaviour
         pickupText.gameObject.SetActive(true);
         craftingMenu.SetActive(false);
         currentlyCrafting = false;
+        pauseMenu.SetActive(false);
+        settingsMenu.SetActive(false);
+        inSettings = false;
+        invertScroll = false;
 
         for(int i = 0; i < playerInventory.craftableItems.Length; i++)
         {
@@ -64,6 +77,16 @@ public class UI : MonoBehaviour
 
     private void Update()
     {
+        if (playerController.gameIsPaused)
+        {
+            pauseMenu.SetActive(true);
+        }
+        else
+        {
+            pauseMenu.SetActive(false);
+            settingsMenu.SetActive(false);
+        }
+
         if (playerController.itemInRange)
         {
             if(playerController.item != null)
@@ -76,11 +99,11 @@ public class UI : MonoBehaviour
                 {
                     if (playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == "stone")    // this implementation is messy but works for my sample scene where there are only two resources to harvest
                     {
-                        pickupText.text = "Select pickaxe to harvest stone";
+                        pickupText.text = "Select pickaxe and click to harvest stone";
                     }
-                    else
+                    else if (playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == "wood")
                     {
-                        pickupText.text = "Select axe to harvest wood";
+                        pickupText.text = "Select axe and click to harvest wood";
                     }
                 }
             }
@@ -95,6 +118,11 @@ public class UI : MonoBehaviour
     {
         SelectItemToCraftUI();
         CheckRequirementsUI(craftID);
+    }
+
+    public void ToggleScroll()
+    {
+        invertScroll = !invertScroll;
     }
 
     public void AddItem()
@@ -132,26 +160,56 @@ public class UI : MonoBehaviour
     public void SelectUp()
     {
         selectIndicators[selectedItem].SetActive(false);
-        if(selectedItem == inventorySlots.Length - 1)
+
+        if (!invertScroll)
         {
-            selectedItem = 0;
+            if (selectedItem == inventorySlots.Length - 1)
+            {
+                selectedItem = 0;
+            }
+            else
+            {
+                selectedItem++;
+            }
         }
         else
         {
-            selectedItem++;
+            if (selectedItem == 0)
+            {
+                selectedItem = inventorySlots.Length - 1;
+            }
+            else
+            {
+                selectedItem--;
+            }
         }
+
         selectIndicators[selectedItem].SetActive(true);
     }
     public void SelectDown()
     {
         selectIndicators[selectedItem].SetActive(false);
-        if (selectedItem == 0)
+        if (invertScroll)
         {
-            selectedItem = inventorySlots.Length - 1;
+            if (selectedItem == inventorySlots.Length - 1)
+            {
+                selectedItem = 0;
+            }
+            else
+            {
+                selectedItem++;
+            }
         }
         else
         {
-            selectedItem--;
+            if (selectedItem == 0)
+            {
+                selectedItem = inventorySlots.Length - 1;
+            }
+            else
+            {
+                selectedItem--;
+            }
         }
         selectIndicators[selectedItem].SetActive(true);
     }
@@ -255,15 +313,31 @@ public class UI : MonoBehaviour
 
     public void ActuallyCraft()
     {
+        SelectItemToCraftUI();
         CheckRequirementsUI(craftID);
         bool success = craftingScript.CanCraftCheck(craftID);
         craftingScript.Craft(craftID);
         if (success)
         {
+            for(int i = 0; i < playerInventory.itemSlots.Length; i++)
+            {
+                UpdateSpritesAndQuantities(i);
+            }
             craftingMenu.SetActive(false);
             invPanel.SetActive(true);
             pickupText.gameObject.SetActive(true);
             currentlyCrafting = false;
         }
+    }
+
+    public void OpenSettings()
+    {
+        settingsMenu.SetActive(true);
+        pauseMenu.SetActive(false);
+    }
+
+    public void ChangeRotSpeed()
+    {
+        playerController.rotateSpeed = rotationSlider.value;
     }
 }

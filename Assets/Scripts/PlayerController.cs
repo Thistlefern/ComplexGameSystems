@@ -8,7 +8,12 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    // TODO* seperate from UI if possible
+    // TODO* fix grossness later in script with crafting items, see comments
+
     public PlayerInput input;
+
+    public bool gameIsPaused;
 
     public float moveSpeed;
     public float rotateSpeed;
@@ -78,9 +83,33 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["NoUICraft"].performed -= InputNoUICraft;
     }
 
+    public void TestFunction()
+    {
+        Debug.Log("Use this for testing a function.");
+    }
+
+    public void PauseUnpause()
+    {
+        if (gameIsPaused)
+        {
+            Time.timeScale = 1;
+            gameIsPaused = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            gameIsPaused = true;
+        }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
     public void InputJump(InputAction.CallbackContext obj)
     {
-        if (!hasJumped && !ui.currentlyCrafting)
+        if (!hasJumped && !ui.currentlyCrafting && !gameIsPaused)
         {
             rbody.AddForce(0, jumpHeight, 0, ForceMode.Impulse);
             hasJumped = true;
@@ -89,7 +118,7 @@ public class PlayerController : MonoBehaviour
     }
     public void InputInteract(InputAction.CallbackContext obj)
     {
-        if(item != null)
+        if(item != null && !gameIsPaused)
         {
             if(item.GetComponent<Item>().type.ToString() == "Resource")
             {
@@ -100,7 +129,7 @@ public class PlayerController : MonoBehaviour
 
     public void InputUseTool(InputAction.CallbackContext obj)
     {
-        if (item != null)
+        if (item != null && !gameIsPaused)
         {
             if (item.GetComponent<Item>().type.ToString() == "Source")
             {
@@ -117,6 +146,7 @@ public class PlayerController : MonoBehaviour
                                     if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
                                     {
                                         inventory.itemQuantities[j] += 3;
+                                        itemInRange = false;
                                         Destroy(item);
                                         item = null;
                                         ui.UpdateSpritesAndQuantities(j);
@@ -134,6 +164,7 @@ public class PlayerController : MonoBehaviour
                                 if (count == inventory.itemSlots.Length)
                                 {
                                     PickUpItem(resources[0], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
+                                    itemInRange = false;
                                     ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
@@ -150,6 +181,7 @@ public class PlayerController : MonoBehaviour
                                     if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
                                     {
                                         inventory.itemQuantities[j] += 3;
+                                        itemInRange = false;
                                         Destroy(item);
                                         item = null;
                                         ui.UpdateSpritesAndQuantities(j);
@@ -167,6 +199,7 @@ public class PlayerController : MonoBehaviour
                                 if (count == inventory.itemSlots.Length)
                                 {
                                     PickUpItem(resources[1], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
+                                    itemInRange = false;
                                     ui.UpdateSpritesAndQuantities(j);
                                 }
                             }
@@ -183,12 +216,19 @@ public class PlayerController : MonoBehaviour
 
     public void InputSort(InputAction.CallbackContext obj)
     {
-        inventory.Sort();
+        if (!gameIsPaused)
+        {
+            inventory.Sort();
+            for (int d = 0; d < inventory.maxItems; d++)
+            {
+                ui.UpdateSpritesAndQuantities(d);
+            }
+        }
     }
 
     public void InputCraft(InputAction.CallbackContext obj)
     {
-        if(ui != null)
+        if(ui != null && !gameIsPaused)
         {
             if (ui.currentlyCrafting)
             {
@@ -210,11 +250,15 @@ public class PlayerController : MonoBehaviour
 
     public void InputNoUICraft(InputAction.CallbackContext obj)
     {
-        craftScript.Craft(0);       // will always craft the item in slot 0, which in this case is an axe
+        if (!gameIsPaused)
+        {
+            craftScript.Craft(0);       // will always craft the item in slot 0, which in this case is an axe
+        }
     }
 
     private void Start()
     {
+        gameIsPaused = false;
         itemInRange = false;
         item = null;
         count = 0;
@@ -222,24 +266,27 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        if(ui != null)
+        if (!gameIsPaused)
         {
-            if (!ui.currentlyCrafting)
+            if(ui != null)
+            {
+                if (!ui.currentlyCrafting)
+                {
+                    Move(m_Move);
+                    Rotate(m_Rotation);
+                    Select(m_Select);
+                }
+                else
+                {
+                    animator.SetBool("IsMoving", false);
+                }
+            }
+            else
             {
                 Move(m_Move);
                 Rotate(m_Rotation);
                 Select(m_Select);
             }
-            else
-            {
-                animator.SetBool("IsMoving", false);
-            }
-        }
-        else
-        {
-            Move(m_Move);
-            Rotate(m_Rotation);
-            Select(m_Select);
         }
     }
 
@@ -297,7 +344,7 @@ public class PlayerController : MonoBehaviour
 
     public void PickUpItem(Item thing, int quant)
     {
-        if (itemInRange)
+        if (itemInRange && !gameIsPaused)
         {
             if (inventory.invFull)
             {

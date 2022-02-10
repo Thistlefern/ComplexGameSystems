@@ -6,6 +6,14 @@
             "id": "fa702c4b-458f-4f4f-88b1-009c3eb79757",
             "actions": [
                 {
+                    "name": "PauseUnpause",
+                    "type": "Button",
+                    "id": "7618764e-b856-48a8-9052-e08eea121ee4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Move",
                     "type": "Value",
                     "id": "9af5aef0-ce42-4841-86d9-7d8e6f76d360",
@@ -70,17 +78,17 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Test",
+                    "name": "NoUICraft",
                     "type": "Button",
-                    "id": "06cb6b54-6df1-4405-9dde-ee5b61708669",
+                    "id": "42bb9e09-121a-466f-8c12-b0291e54cbd6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "NoUICraft",
+                    "name": "Test",
                     "type": "Button",
-                    "id": "42bb9e09-121a-466f-8c12-b0291e54cbd6",
+                    "id": "06cb6b54-6df1-4405-9dde-ee5b61708669",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -243,6 +251,17 @@
                 },
                 {
                     "name": "",
+                    "id": "4d485e2c-90b3-4d43-b05a-e1a05df94801",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Harvest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "a228d627-eca7-4ff4-85b9-c395221a5ae0",
                     "path": "<Keyboard>/slash",
                     "interactions": "",
@@ -254,12 +273,12 @@
                 },
                 {
                     "name": "",
-                    "id": "4d485e2c-90b3-4d43-b05a-e1a05df94801",
-                    "path": "<Mouse>/leftButton",
+                    "id": "75f402a4-b7ce-4149-b9ea-731f6ebf0d22",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Harvest",
+                    "action": "PauseUnpause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

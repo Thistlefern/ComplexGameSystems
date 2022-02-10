@@ -7,8 +7,6 @@ public class Crafting : MonoBehaviour
     public bool[] componentCheck;   // each bool becomes true if the player has enough of the item in that location of the Recipe Components array
     public PlayerInventory player;  // checks the player's inventory for items to make sure that crafting can occur
 
-    public UI ui;                   // NOT REQUIRED TO ASSIGN but please keep this here
-
     public bool CanCraftCheck(int number)
     {
         bool canBuild = false;
@@ -66,11 +64,6 @@ public class Crafting : MonoBehaviour
 
     public void Craft(int number)
     {
-        if(ui != null)
-        {
-            ui.SelectItemToCraftUI();
-        }
-
         bool canBuild = CanCraftCheck(number); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
 
         if (canBuild)
@@ -94,14 +87,6 @@ public class Crafting : MonoBehaviour
             player.itemSlots[player.firstEmpty] = player.craftableItems[number].GetComponent<Item>();
             player.itemQuantities[player.firstEmpty]++;
             player.firstEmptyFound = false;
-
-            if (ui != null)
-            {
-                for (int d = 0; d < player.maxItems; d++)
-                {
-                    ui.UpdateSpritesAndQuantities(d);
-                }
-            }
         }
         else
         {

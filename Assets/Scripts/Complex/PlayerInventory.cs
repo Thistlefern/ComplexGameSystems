@@ -6,8 +6,6 @@ using TMPro;
 public class PlayerInventory : MonoBehaviour
 {
     // TODO can drop item
-    // TODO DOCUMENTATION
-    // TODO* settings menu
 
     public Item[] allPossibleItems; // holds every item in the game ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST FILL THIS WITH PREFABS THAT HAVE THE ITEM SCRIPT THROUGH THE ENGINE *****
     public Recipe[] craftableItems; // fills automatically with all items that exist that have a recipe
@@ -20,8 +18,6 @@ public class PlayerInventory : MonoBehaviour
     public bool firstEmptyFound;    // is true if the first empty space has been found in relevent functions
     public int slotToAddTo;         // used while determining where in the player's inventory to place an item
     public bool invFull;            // is true if the player's inventory is full
-
-    public UI ui;                   // NOT REQUIRED TO ASSIGN but please keep this here
 
     private void Awake()
     {
@@ -53,10 +49,6 @@ public class PlayerInventory : MonoBehaviour
         firstEmptyFound = false;
         slotToAddTo = 0;
         invFull = false;
-    }
-    public void TestFunction()
-    {
-        Debug.Log("Use this for testing a function.");
     }
 
     public void FindFirstEmpty()
@@ -118,7 +110,9 @@ public class PlayerInventory : MonoBehaviour
                 if(items[s] == null && items[s+1] != null)
                 {
                     items[s] = items[s+1];
+                    itemQuantities[s] = itemQuantities[s + 1];
                     items[s + 1] = null;
+                    itemQuantities[s + 1] = 0;
                 }
                 else
                 {
@@ -128,14 +122,6 @@ public class PlayerInventory : MonoBehaviour
 
             if(sortCount == (maxItems - 1))
             {
-                if(ui != null)
-                {
-                    for (int d = 0; d < maxItems; d++)
-                    {
-                        ui.UpdateSpritesAndQuantities(d);
-                    }
-                }
-
                 toTheLeft = true;
             }
         }
@@ -165,14 +151,6 @@ public class PlayerInventory : MonoBehaviour
 
             if (sortCount == (maxItems - 1))
             {
-                if (ui != null)
-                {
-                    for (int d = 0; d < maxItems; d++)
-                    {
-                        ui.UpdateSpritesAndQuantities(d);
-                    }
-                }
-
                 sorted = true;
             }
         }
