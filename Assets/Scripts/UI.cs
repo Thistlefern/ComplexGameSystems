@@ -7,6 +7,8 @@ using System.Linq;
 
 public class UI : MonoBehaviour
 {
+    // TODO tool order setting
+
     public GameObject invPanel;
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;

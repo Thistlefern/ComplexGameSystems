@@ -88,9 +88,5 @@ public class Crafting : MonoBehaviour
             player.itemQuantities[player.firstEmpty]++;
             player.firstEmptyFound = false;
         }
-        else
-        {
-            // Player cannot craft this item
-        }
     }
 }
