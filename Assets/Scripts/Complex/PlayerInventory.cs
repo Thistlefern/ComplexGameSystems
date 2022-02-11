@@ -5,7 +5,9 @@ using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
-    // TODO can drop item
+    // TODO can drop/place items
+    // TODO backpack
+    // TODO reorganize yourself
 
     public Item[] allPossibleItems; // holds every item in the game ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST FILL THIS WITH PREFABS THAT HAVE THE ITEM SCRIPT THROUGH THE ENGINE *****
     public Recipe[] craftableItems; // fills automatically with all items that exist that have a recipe
@@ -152,6 +154,28 @@ public class PlayerInventory : MonoBehaviour
             if (sortCount == (maxItems - 1))
             {
                 sorted = true;
+            }
+        }
+    }
+
+    public void PickUpItem(Item thing, int quant)
+    {
+        if (invFull)
+        {
+            Debug.Log("Inventory is full");
+        }
+        else
+        {
+            if (slotToAddTo != 0)
+            {
+                for (int i = 0; i < allPossibleItems.Length; i++)
+                {
+                    if (allPossibleItems[i].itemName == thing.itemName)
+                    {
+                        itemSlots[slotToAddTo - 1] = allPossibleItems[i];
+                        itemQuantities[slotToAddTo - 1] += quant;
+                    }
+                }
             }
         }
     }

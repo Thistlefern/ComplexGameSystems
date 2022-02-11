@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
 
     public bool gameIsPaused;
 
+    Vector3 resetPos = new Vector3(0.0f, 5.0f, 0.0f);
+    public bool reseting;
+
     public float moveSpeed;
     public float rotateSpeed;
     public float jumpHeight;
@@ -64,6 +67,74 @@ public class PlayerController : MonoBehaviour
             hasJumped = false;
             animator.SetBool("IsJumping", false);
         }
+
+        if (collision.collider.CompareTag("Ground"))
+        {
+            reseting = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ocean"))
+        {
+            rbody.position = resetPos;
+            reseting = true;
+            animator.SetBool("IsMoving", false);
+            animator.SetBool("IsJumping", false);
+        }
+        else
+        {
+            itemInRange = true;
+            item = other.gameObject;
+
+            for (int i = 0; i < inventory.itemSlots.Length; i++)
+            {
+                if (inventory.itemSlots[i] != null)
+                {
+                    if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
+                    {
+                        inventory.slotToAddTo = i + 1;   // if you already have one, select the slot it is in
+                        return;
+                    }
+                    else
+                    {
+                        count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
+                    }
+                }
+                else
+                {
+                    count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
+                    if (!inventory.firstEmptyFound)   // keep track of the first empty slot that the player has
+                    {
+                        inventory.firstEmptyFound = true;
+                        inventory.firstEmpty = i;
+                    }
+                }
+            }
+
+            if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+            {
+                if (!inventory.firstEmptyFound)
+                {
+                    inventory.invFull = true;
+                }
+                else
+                {
+                    inventory.slotToAddTo = inventory.firstEmpty + 1;  // if there is an empty slot, select that slot
+                }
+            }
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        itemInRange = false;
+        item = null;
+        inventory.slotToAddTo = 0;
+        inventory.firstEmptyFound = false;
+        count = 0;
     }
 
     private void OnEnable()
@@ -118,98 +189,127 @@ public class PlayerController : MonoBehaviour
     }
     public void InputInteract(InputAction.CallbackContext obj)
     {
-        if(item != null && !gameIsPaused)
+        if(item != null && !gameIsPaused && itemInRange)
         {
             if(item.GetComponent<Item>().type.ToString() == "Resource")
             {
-                PickUpItem(item.GetComponent<Item>(), 1);
+                inventory.PickUpItem(item.GetComponent<Item>(), 1);
+                ui.AddItem();
+                itemInRange = false;
+                inventory.slotToAddTo = 0;
+                inventory.firstEmptyFound = false;
+                count = 0;
+                Destroy(item);
+                item = null;
             }
         }
     }
 
     public void InputUseTool(InputAction.CallbackContext obj)
     {
-        if (item != null && !gameIsPaused)
+        string correctTool = "";
+
+        if (item != null && !gameIsPaused)   // TODO fix, this is gross
         {
             if (item.GetComponent<Item>().type.ToString() == "Source")
             {
-                switch (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
+                if(inventory.itemSlots[ui.selectedItem] != null && item.GetComponent<Item>().resourceType != null)
                 {
-                    case "stone":
-                        if (inventory.itemSlots[ui.selectedItem].itemName == "pickaxe")
+                    for (int i = 0; i < inventory.craftableItems.Length; i++)
+                    {
+                        if (inventory.craftableItems[i].GetComponent<Item>().specialty.ToString() == item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
                         {
-                            int count = 0;
-                            for (int j = 0; j < inventory.itemSlots.Length; j++)
-                            {
-                                if (inventory.itemSlots[j] != null)
-                                {
-                                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
-                                    {
-                                        inventory.itemQuantities[j] += 3;
-                                        itemInRange = false;
-                                        Destroy(item);
-                                        item = null;
-                                        ui.UpdateSpritesAndQuantities(j);
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        count++;
-                                    }
-                                }
-                                else
-                                {
-                                    count++;
-                                }
-                                if (count == inventory.itemSlots.Length)
-                                {
-                                    PickUpItem(resources[0], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
-                                    itemInRange = false;
-                                    ui.UpdateSpritesAndQuantities(j);
-                                }
-                            }
+                            correctTool = inventory.craftableItems[i].GetComponent<Item>().itemName;
                         }
-                        break;
-                    case "wood":
-                        if (inventory.itemSlots[ui.selectedItem].itemName == "axe")
-                        {
-                            int count = 0;
-                            for (int j = 0; j < inventory.itemSlots.Length; j++)
-                            {
-                                if (inventory.itemSlots[j] != null)
-                                {
-                                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
-                                    {
-                                        inventory.itemQuantities[j] += 3;
-                                        itemInRange = false;
-                                        Destroy(item);
-                                        item = null;
-                                        ui.UpdateSpritesAndQuantities(j);
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        count++;
-                                    }
-                                }
-                                else
-                                {
-                                    count++;
-                                }
-                                if (count == inventory.itemSlots.Length)
-                                {
-                                    PickUpItem(resources[1], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
-                                    itemInRange = false;
-                                    ui.UpdateSpritesAndQuantities(j);
-                                }
-                            }
-                        }
-                        break;
-                    case "grass":
-                        break;
-                    default:
-                        break;
+                    }
+
+                    if (inventory.itemSlots[ui.selectedItem].specialty.ToString() == item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
+                    {
+                        Debug.Log("Harvest!");
+                    }
+                    else
+                    {
+                        Debug.Log("Wrong tool");
+                    }
                 }
+
+                //switch (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
+                //{
+                //    case "stone":
+                //        if (inventory.itemSlots[ui.selectedItem].itemName == "pickaxe")
+                //        {
+                //            int count = 0;
+                //            for (int j = 0; j < inventory.itemSlots.Length; j++)
+                //            {
+                //                if (inventory.itemSlots[j] != null)
+                //                {
+                //                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
+                //                    {
+                //                        inventory.itemQuantities[j] += 3;
+                //                        itemInRange = false;
+                //                        Destroy(item);
+                //                        item = null;
+                //                        ui.UpdateSpritesAndQuantities(j);
+                //                        return;
+                //                    }
+                //                    else
+                //                    {
+                //                        count++;
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    count++;
+                //                }
+                //                if (count == inventory.itemSlots.Length)
+                //                {
+                //                    inventory.PickUpItem(resources[0], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
+                //                    itemInRange = false;
+                //                    ui.UpdateSpritesAndQuantities(j);
+                //                }
+                //            }
+                //        }
+                //        break;
+                //    case "wood":
+                //        if (inventory.itemSlots[ui.selectedItem].itemName == "axe")
+                //        {
+                //            int count = 0;
+                //            for (int j = 0; j < inventory.itemSlots.Length; j++)
+                //            {
+                //                if (inventory.itemSlots[j] != null)
+                //                {
+                //                    if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
+                //                    {
+                //                        inventory.itemQuantities[j] += 3;
+                //                        itemInRange = false;
+                //                        Destroy(item);
+                //                        item = null;
+                //                        ui.UpdateSpritesAndQuantities(j);
+                //                        return;
+                //                    }
+                //                    else
+                //                    {
+                //                        count++;
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    count++;
+                //                }
+                //                if (count == inventory.itemSlots.Length)
+                //                {
+                //                    inventory.PickUpItem(resources[1], 3);    // gross, if this was part of my actual system I would change this but it works for only having a few resources
+                //                    itemInRange = false;
+                //                    ui.UpdateSpritesAndQuantities(j);
+                //                }
+                //            }
+                //        }
+                //        break;
+                //    case "grass":
+                //        break;
+                //    default:
+                //        break;
+                //}
             }
         }
     }
@@ -259,6 +359,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         gameIsPaused = false;
+        reseting = false;
         itemInRange = false;
         item = null;
         count = 0;
@@ -266,7 +367,7 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        if (!gameIsPaused)
+        if (!gameIsPaused && !reseting)
         {
             if(ui != null)
             {
@@ -289,92 +390,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        itemInRange = true;
-        item = other.gameObject;
-
-        for (int i = 0; i < inventory.itemSlots.Length; i++)
-        {
-            if (inventory.itemSlots[i] != null)
-            {
-                if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
-                {
-                    inventory.slotToAddTo = i + 1;   // if you already have one, select the slot it is in
-                    return;
-                }
-                else
-                {
-                    count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
-                }
-            }
-            else
-            {
-                count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
-                if (!inventory.firstEmptyFound)   // keep track of the first empty slot that the player has
-                {
-                    inventory.firstEmptyFound = true;
-                    inventory.firstEmpty = i;
-                }
-            }
-        }
-
-        if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
-        {
-            if (!inventory.firstEmptyFound)
-            {
-                inventory.invFull = true;
-            }
-            else
-            {
-                inventory.slotToAddTo = inventory.firstEmpty + 1;  // if there is an empty slot, select that slot
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        itemInRange = false;
-        item = null;
-        inventory.slotToAddTo = 0;
-        inventory.firstEmptyFound = false;
-        count = 0;
-    }
-
-    public void PickUpItem(Item thing, int quant)
-    {
-        if (itemInRange && !gameIsPaused)
-        {
-            if (inventory.invFull)
-            {
-                Debug.Log("Inventory is full");
-            }
-            else
-            {
-                if (inventory.slotToAddTo != 0)
-                {
-                    for (int i = 0; i < inventory.allPossibleItems.Length; i++)
-                    {
-                        if (inventory.allPossibleItems[i].itemName == thing.itemName)
-                        {
-                            inventory.itemSlots[inventory.slotToAddTo - 1] = inventory.allPossibleItems[i];
-                            inventory.itemQuantities[inventory.slotToAddTo - 1] += quant;
-                        }
-                    }
-                }
-
-                ui.AddItem();
-                itemInRange = false;
-                inventory.slotToAddTo = 0;
-                inventory.firstEmptyFound = false;
-                count = 0;
-                Destroy(item);
-                item = null;
-            }
-        }
-    }
-
     private void Move(Vector2 direction)    // TODO* change to velocity instead of transform.position
     {
         if (direction.sqrMagnitude < 0.01)

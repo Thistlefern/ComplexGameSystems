@@ -7,8 +7,6 @@ using System.Linq;
 
 public class UI : MonoBehaviour
 {
-    // TODO* settings menu
-
     public GameObject invPanel;
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
@@ -89,7 +87,20 @@ public class UI : MonoBehaviour
 
         if (playerController.itemInRange)
         {
-            if(playerController.item != null)
+            string correctTool = "";
+
+            for (int i = 0; i < playerInventory.craftableItems.Length; i++)
+            {
+                if (playerController.item.GetComponent<Item>().resourceType != null)
+                {
+                    if (playerInventory.craftableItems[i].GetComponent<Item>().specialty.ToString() == playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName)
+                    {
+                        correctTool = playerInventory.craftableItems[i].GetComponent<Item>().itemName;
+                    }
+                }
+            }
+
+            if (playerController.item != null)
             {
                 if (playerController.item.GetComponent<Item>().type.ToString() == "Resource")
                 {
@@ -97,14 +108,7 @@ public class UI : MonoBehaviour
                 }
                 else if (playerController.item.GetComponent<Item>().type.ToString() == "Source")
                 {
-                    if (playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == "stone")    // this implementation is messy but works for my sample scene where there are only two resources to harvest
-                    {
-                        pickupText.text = "Select pickaxe and click to harvest stone";
-                    }
-                    else if (playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == "wood")
-                    {
-                        pickupText.text = "Select axe and click to harvest wood";
-                    }
+                    pickupText.text = "Select " + correctTool + " and click to harvest " + playerController.item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName;
                 }
             }
         }
