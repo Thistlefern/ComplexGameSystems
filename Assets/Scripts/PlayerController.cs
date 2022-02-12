@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using System;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -41,6 +42,10 @@ public class PlayerController : MonoBehaviour
     public bool itemInRange;
     public GameObject item;
     public bool noRoom;
+
+    public new Camera camera;
+
+    public GraphicRaycaster graphicRaycaster;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -204,6 +209,14 @@ public class PlayerController : MonoBehaviour
 
     public void InputUseTool(InputAction.CallbackContext obj)
     {
+        //Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        //Physics.Raycast(ray, out RaycastHit hit);
+        //Debug.Log(hit.transform.name);
+
+        //Debug.Log(graphicRaycaster.gameObject.GetComponentInChildren<GameObject>().name);
+
+
+
         string correctTool = "";
 
         if (item != null && !gameIsPaused)
