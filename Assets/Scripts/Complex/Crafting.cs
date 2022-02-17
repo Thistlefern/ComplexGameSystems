@@ -59,24 +59,31 @@ public class Crafting : MonoBehaviour
             canBuild = true;
         }
 
+        if (player.invFull)                     // In this implementation, you can't build even if you would have room after ingredients are removed during crafting
+        {
+            canBuild = false;
+        }
+
         return canBuild;
     }
 
     public void Craft(int number)
     {
-        bool canBuild = CanCraftCheck(number); // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
-
+        bool canBuild = CanCraftCheck(number);  // if using my UI script, craft ID will be set in crafting menu. Otherwise, set the ID in Unity or via your own means
+        
         if (canBuild)
         {
             for(int i = 0; i < player.itemSlots.Length; i++)
             {
                 if(player.itemSlots[i] != null)
                 {
+                    bool resourceFound = false;
                     for (int j = 0; j < player.craftableItems[number].components.Length; j++)
                     {
-                        if (player.itemSlots[i].itemName == player.craftableItems[number].components[j].itemName)
+                        if (player.itemSlots[i].itemName == player.craftableItems[number].components[j].itemName && !resourceFound)
                         {
                             player.itemQuantities[i] -= player.craftableItems[number].componentQuantities[j];
+                            resourceFound = true;
                         }
                     }
                 }

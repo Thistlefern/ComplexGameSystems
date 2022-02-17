@@ -68,7 +68,7 @@ public class PlayerInventory : MonoBehaviour
             }
         }
 
-        if (count == itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+        if (count == itemSlots.Length)
         {
             if (!firstEmptyFound)
             {

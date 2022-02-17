@@ -286,6 +286,7 @@ public class PlayerController : MonoBehaviour
                             {
                                 count++;
                             }
+
                             if (count == inventory.itemSlots.Length)
                             {
                                 inventory.PickUpItem(item.GetComponent<Item>().resourceType.GetComponent<Item>(), 3);
@@ -388,7 +389,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    private void Move(Vector2 direction)    // TODO* change to velocity instead of transform.position
+    private void Move(Vector2 direction)    // TODO** change to velocity instead of transform.position
     {
         if (direction.sqrMagnitude < 0.01)
         {

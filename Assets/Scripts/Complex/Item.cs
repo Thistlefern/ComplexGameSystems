@@ -29,7 +29,7 @@ public class Item : MonoBehaviour
 
     [Tooltip("Only needed if implementing a shopping/selling system.")]
     public float cost;  // how much the item costs
-    // Ideas to consider adding: health, stamina
+    // Ideas to consider adding: health, stamina, max stack size in inventory
     #endregion
 
     [HorizontalLine(color: EColor.Red)]

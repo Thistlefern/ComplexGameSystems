@@ -13,6 +13,7 @@ public class UI : MonoBehaviour
     public GameObject hotbarUI;
     public GameObject backpackUI;
     public TMP_Text pickupText;
+    // public TMP_Text errorText;
     
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
@@ -369,6 +370,17 @@ public class UI : MonoBehaviour
             for(int i = 0; i < playerInventory.itemSlots.Length; i++)
             {
                 UpdateSpritesAndQuantities(i);
+            }
+        }
+        else
+        {
+            if (playerInventory.invFull)
+            {
+                Debug.Log("Can't craft, inventory full");
+            }
+            else
+            {
+                Debug.Log("Can't craft, missing materials");
             }
         }
     }
