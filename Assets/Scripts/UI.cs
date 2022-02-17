@@ -7,12 +7,19 @@ using System.Linq;
 
 public class UI : MonoBehaviour
 {
-    // TODO tool order setting
+    // TODO* tool order setting
+    // TODO* reorganize yourself
 
-    public GameObject invPanel;
+    public GameObject hotbarUI;
+    public GameObject backpackUI;
+    public TMP_Text pickupText;
+    
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
-    public TMP_Text pickupText;
+
+    public Image[] hotbarSlots;
+    public TMP_Text[] hotbarQuantities;
+
     public PlayerInventory playerInventory;
     public PlayerController playerController;
     public Sprite nullSprite;
@@ -41,6 +48,8 @@ public class UI : MonoBehaviour
 
     private void Start()
     {
+        backpackUI.SetActive(false);
+
         selectedItem = 0;
         for(int i = 0; i < selectIndicators.Length; i++)
         {
@@ -53,12 +62,17 @@ public class UI : MonoBehaviour
             inventoryQuantities[i].text = "";
         }
 
+        for (int i = 0; i < hotbarQuantities.Length; i++)
+        {
+            hotbarQuantities[i].text = "";
+        }
+
         if (inventorySlots.Length != playerInventory.maxItems)
         {
             Debug.LogError("Mismatched number of inventory slots: UI has space for " + inventorySlots.Length + " items, while player inventory has space to hold " + playerInventory.maxItems + " items.");
         }
 
-        invPanel.SetActive(true);
+        hotbarUI.SetActive(true);
         pickupText.gameObject.SetActive(true);
         craftingMenu.SetActive(false);
         currentlyCrafting = false;
@@ -77,6 +91,12 @@ public class UI : MonoBehaviour
 
     private void Update()
     {
+        for (int i = 0; i < hotbarSlots.Length; i++)
+        {
+            hotbarSlots[i].sprite = inventorySlots[i].sprite;
+            hotbarQuantities[i].text = inventoryQuantities[i].text;
+        }
+
         if (playerController.gameIsPaused)
         {
             pauseMenu.SetActive(true);
@@ -146,19 +166,40 @@ public class UI : MonoBehaviour
 
     public void UpdateSpritesAndQuantities(int number)
     {
-        for (int i = 0; i < playerInventory.maxItems; i++)
+        if (!currentlyCrafting)
         {
-            if(playerInventory.itemSlots[number] != null)
+            for (int i = 0; i < playerInventory.hotbarItems; i++)
             {
-                inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
-                inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
-            }                                                                                           // the quantity will show as 0.
+                if (playerInventory.itemSlots[number] != null)
+                {
+                    inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
+                    inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
+                }                                                                                           // the quantity will show as 0.
 
-            if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+                if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+                {
+                    inventorySlots[i].sprite = nullSprite;
+                    inventoryQuantities[i].text = "";
+                    playerInventory.itemSlots[i] = null;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < playerInventory.maxItems; i++)
             {
-                inventorySlots[i].sprite = nullSprite;
-                inventoryQuantities[i].text = "";
-                playerInventory.itemSlots[i] = null;
+                if (playerInventory.itemSlots[number] != null)
+                {
+                    inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
+                    inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
+                }                                                                                           // the quantity will show as 0.
+
+                if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+                {
+                    inventorySlots[i].sprite = nullSprite;
+                    inventoryQuantities[i].text = "";
+                    playerInventory.itemSlots[i] = null;
+                }
             }
         }
     }
@@ -169,7 +210,7 @@ public class UI : MonoBehaviour
 
         if (!invertScroll)
         {
-            if (selectedItem == inventorySlots.Length - 1)
+            if (selectedItem == hotbarSlots.Length - 1)
             {
                 selectedItem = 0;
             }
@@ -182,7 +223,7 @@ public class UI : MonoBehaviour
         {
             if (selectedItem == 0)
             {
-                selectedItem = inventorySlots.Length - 1;
+                selectedItem = hotbarSlots.Length - 1;
             }
             else
             {
@@ -197,7 +238,7 @@ public class UI : MonoBehaviour
         selectIndicators[selectedItem].SetActive(false);
         if (invertScroll)
         {
-            if (selectedItem == inventorySlots.Length - 1)
+            if (selectedItem == hotbarSlots.Length - 1)
             {
                 selectedItem = 0;
             }
@@ -210,7 +251,7 @@ public class UI : MonoBehaviour
         {
             if (selectedItem == 0)
             {
-                selectedItem = inventorySlots.Length - 1;
+                selectedItem = hotbarSlots.Length - 1;
             }
             else
             {
@@ -329,10 +370,6 @@ public class UI : MonoBehaviour
             {
                 UpdateSpritesAndQuantities(i);
             }
-            craftingMenu.SetActive(false);
-            invPanel.SetActive(true);
-            pickupText.gameObject.SetActive(true);
-            currentlyCrafting = false;
         }
     }
 

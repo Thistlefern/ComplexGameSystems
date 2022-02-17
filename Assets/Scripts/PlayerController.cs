@@ -9,8 +9,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    // TODO* seperate from UI if possible
-    // TODO* fix grossness later in script with crafting items, see comments
+    // TODO** seperate from UI if possible
 
     public PlayerInput input;
 
@@ -34,10 +33,12 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rbody;
     public new Collider collider;
     public Animator animator;
+    public GameObject dropPos;      // where an item prefab is dropped when DropItem is called
 
     public PlayerInventory inventory;
     public UI ui;
     public Crafting craftScript;
+    public int quantToDrop;         // what quantity of an item should drop when DropItem is called?
 
     public bool itemInRange;
     public GameObject item;
@@ -142,7 +143,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        input.currentActionMap["Jump"].performed += InputJump;  // TODO* maybe change all input to this later but it works for now (remember to clean up if you add things here)
+        input.currentActionMap["Jump"].performed += InputJump;  // TODO** maybe change all input to this later but it works for now (remember to clean up if you add things here)
         input.currentActionMap["Interact"].performed += InputInteract;
         input.currentActionMap["Sort"].performed += InputSort;
         input.currentActionMap["Craft"].performed += InputCraft;
@@ -157,9 +158,12 @@ public class PlayerController : MonoBehaviour
         input.currentActionMap["NoUICraft"].performed -= InputNoUICraft;
     }
 
-    public void TestFunction()
+    public void TestFunction(InputAction.CallbackContext obj)
     {
-        Debug.Log("Use this for testing a function.");
+        if (obj.performed)
+        {
+            Debug.Log("Use this for testing a function.");
+        }
     }
 
     public void PauseUnpause()
@@ -207,14 +211,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void InputUseTool(InputAction.CallbackContext obj)
+    public void InputDropItem(InputAction.CallbackContext obj)
+    {
+        if (obj.performed)
+        {
+            for(int i = 0; i < inventory.allPossibleItems.Length; i++)
+            {
+                if(inventory.itemSlots[ui.selectedItem] != null)
+                {
+                    if(inventory.allPossibleItems[i].itemName == inventory.itemSlots[ui.selectedItem].itemName)
+                    {
+                        for(int j = 0; j < quantToDrop; j++)
+                        {
+                            Instantiate(inventory.allPossibleItems[i], dropPos.transform.position, transform.rotation);
+                        }
+                    }
+                }
+            }
+
+            inventory.DropItem(ui.selectedItem, quantToDrop);
+            ui.UpdateSpritesAndQuantities(ui.selectedItem);
+        }
+    }
+
+    public void InputUseTool()
     {
         //Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
         //Physics.Raycast(ray, out RaycastHit hit);
         //Debug.Log(hit.transform.name);
 
         //Debug.Log(graphicRaycaster.gameObject.GetComponentInChildren<GameObject>().name);
-
 
 
         string correctTool = "";
@@ -278,7 +304,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         Debug.Log("Wrong tool");
-                        // TODO* wrong tool indication
+                        // TODO* wrong tool indication in UI
                     }
                 }
             }
@@ -289,7 +315,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!gameIsPaused)
         {
-            inventory.Sort();
+            inventory.Sort(inventory.maxItems);
             for (int d = 0; d < inventory.maxItems; d++)
             {
                 ui.UpdateSpritesAndQuantities(d);
@@ -304,14 +330,16 @@ public class PlayerController : MonoBehaviour
             if (ui.currentlyCrafting)
             {
                 ui.craftingMenu.SetActive(false);
-                ui.invPanel.SetActive(true);
+                ui.backpackUI.SetActive(false);
+                ui.hotbarUI.SetActive(true);
                 ui.pickupText.gameObject.SetActive(true);
                 ui.currentlyCrafting = false;
             }
             else
             {
                 ui.craftingMenu.SetActive(true);
-                ui.invPanel.SetActive(false);
+                ui.backpackUI.SetActive(true);
+                ui.hotbarUI.SetActive(false);
                 ui.pickupText.gameObject.SetActive(false);
                 ui.currentlyCrafting = true;
                 ui.CheckRequirementsUI(ui.craftID);

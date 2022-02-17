@@ -54,6 +54,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "b0949114-defd-4bc1-af9a-ae374ff31bf9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Select",
                     "type": "PassThrough",
                     "id": "43b63df0-871a-4ac8-9305-7626eacc2583",
@@ -279,6 +287,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "PauseUnpause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f1ee0937-81a6-47ae-858c-22ca5a019dad",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,15 +5,12 @@ using TMPro;
 
 public class PlayerInventory : MonoBehaviour
 {
-    // TODO can drop/place items
-    // TODO backpack
-    // TODO reorganize yourself
-
     public Item[] allPossibleItems; // holds every item in the game ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST FILL THIS WITH PREFABS THAT HAVE THE ITEM SCRIPT THROUGH THE ENGINE *****
     public Recipe[] craftableItems; // fills automatically with all items that exist that have a recipe
-    public Item[] itemSlots;        // holds the player's items
+    public Item[] itemSlots;        // holds the player's items (in my implementation, this include both a backpack and a hotbar, the hotbar being the first row of the backpack's items)
     public int[] itemQuantities;    // keeps track of how many of each item in the array above the player currently has
-    public int maxItems;            // keeps track of the maximum number of items that player can hold ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST ENTER THIS IN THE ENGINE *****
+    public int maxItems;            // keeps track of the maximum number of items that player can hold in total ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST ENTER THIS IN THE ENGINE *****
+    public int hotbarItems;         // keeps track of how many items the player's hotbar can hold, if using one ***** IMPORTANT TO DO TO MAKE THIS WORK: YOU MUST ENTER THIS IN THE ENGINE *****
     public int currentRecipes;      // keeps track of how many recipes the player currently has access to
 
     public int firstEmpty;          // used while determining the first empty space in the player's inventory
@@ -79,9 +76,9 @@ public class PlayerInventory : MonoBehaviour
             }
         }
     }
-    public void Sort()
+    public void Sort(int max)
     {
-        for (int i = 0; i < maxItems; i++)
+        for (int i = 0; i < max; i++)
         {
             if (itemSlots[i] != null)
             {
@@ -95,10 +92,10 @@ public class PlayerInventory : MonoBehaviour
             }
         }
 
-        BubbleSort(itemSlots, itemQuantities);
+        BubbleSort(itemSlots, itemQuantities, max);
     }
 
-    void BubbleSort(Item[] items, int[] quantities)
+    void BubbleSort(Item[] items, int[] quantities, int max)
     {
         bool toTheLeft = false;
         bool sorted = false;
@@ -107,7 +104,7 @@ public class PlayerInventory : MonoBehaviour
         {
             int sortCount = 0;
             
-            for(int s = 0; s < (maxItems - 1); s++)
+            for(int s = 0; s < (max - 1); s++)
             {
                 if(items[s] == null && items[s+1] != null)
                 {
@@ -122,7 +119,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
 
-            if(sortCount == (maxItems - 1))
+            if(sortCount == (max - 1))
             {
                 toTheLeft = true;
             }
@@ -132,7 +129,7 @@ public class PlayerInventory : MonoBehaviour
         {
             int sortCount = 0;
 
-            for (int s = 0; s < (maxItems - 1); s++)
+            for (int s = 0; s < (max - 1); s++)
             {
                 if (items[s] != null && items[s + 1] != null && items[s].sortID > items[s + 1].sortID)
                 {
@@ -151,7 +148,7 @@ public class PlayerInventory : MonoBehaviour
                 }
             }
 
-            if (sortCount == (maxItems - 1))
+            if (sortCount == (max - 1))
             {
                 sorted = true;
             }
@@ -176,6 +173,26 @@ public class PlayerInventory : MonoBehaviour
                         itemQuantities[slotToAddTo - 1] += quant;
                     }
                 }
+            }
+        }
+    }
+
+    public void DropItem(int invSlot, int quant)
+    {
+        if(itemSlots[invSlot] == null)
+        {
+            Debug.Log("Slot empty, nothing to drop");
+        }
+        else
+        {
+            if(quant >= itemQuantities[invSlot])
+            {
+                itemQuantities[invSlot] = 0;
+                itemSlots[invSlot] = null;
+            }
+            else
+            {
+                itemQuantities[invSlot] -= quant;
             }
         }
     }
