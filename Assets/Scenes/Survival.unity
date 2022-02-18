@@ -70003,7 +70003,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1639728196}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: InputUseTool
-        m_Mode: 0
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -70078,7 +70078,6 @@ MonoBehaviour:
   firstEmptyFound: 0
   slotToAddTo: 0
   invFull: 0
-  noRoom: 0
 --- !u!114 &1639728196
 MonoBehaviour:
   m_ObjectHideFlags: 0
