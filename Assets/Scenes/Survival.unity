@@ -26898,6 +26898,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636684977}
+  - component: {fileID: 636684978}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -26923,6 +26924,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &636684978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636684976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4c31215545bfa45a6aa58b7fc9b54d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items:
+  - {fileID: 2180347304832311373, guid: abb5a3f439f65ef47b382472c2b40eb9, type: 3}
+  - {fileID: 834663565807865890, guid: 01513ab3ebd5e934b8f72fa47f6ac4d5, type: 3}
+  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
+  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
 --- !u!1 &637965208
 GameObject:
   m_ObjectHideFlags: 0
@@ -70063,17 +70081,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1621558cee85b04fa762fdbf96d0a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allPossibleItems:
-  - {fileID: 2180347304832311373, guid: abb5a3f439f65ef47b382472c2b40eb9, type: 3}
-  - {fileID: 834663565807865890, guid: 01513ab3ebd5e934b8f72fa47f6ac4d5, type: 3}
-  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
-  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
   craftableItems: []
   itemSlots: []
-  itemQuantities: 
   maxItems: 30
   hotbarItems: 6
-  currentRecipes: 0
   firstEmpty: 0
   firstEmptyFound: 0
   slotToAddTo: 0

@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   components:
-  - {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
-  - {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
-  componentQuantities: 0200000003000000
+  - item: {fileID: 1772169257930668768, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
+    quantity: 3
+  - item: {fileID: 1912461844525878605, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
+    quantity: 2

@@ -97,7 +97,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: wood
   itemImage: {fileID: 1432398574588511394, guid: bfbeee4a4437a594f97afc744cc8d210, type: 3}
+  sortID: 0
+  prefab: {fileID: 2726863944378602285}
   type: 1
+  resourceType: {fileID: 0}
   cost: 0
   attack: 0
   destruction: 0

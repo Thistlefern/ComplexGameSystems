@@ -6,17 +6,37 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using System;
 using UnityEngine.UI;
+using NaughtyAttributes;
+using JosiePlayerInventory;
 
 public class PlayerController : MonoBehaviour
 {
     // TODO** seperate from UI if possible
-
+    [HorizontalLine(color: EColor.Red)]
+    #region playerObjectReferences
+    [Header("Player Object References")]
     public PlayerInput input;
+    public Rigidbody rbody;
+    public new Collider collider;
+    public Animator animator;
+    public PlayerInventory inventory;
+    #endregion
+    
+    [HorizontalLine(color: EColor.Red)]
 
-    public bool gameIsPaused;
+    #region otherObjectReferences
+    [Header("Other Object References")]
+    public new Camera camera;
+    public GameObject dropPos;      // where an item prefab is dropped when DropItem is called
+    public UI ui;
+    public Crafting craftScript;
+    #endregion
 
-    Vector3 resetPos = new Vector3(0.0f, 5.0f, 0.0f);
-    public bool reseting;
+    [HorizontalLine(color: EColor.Red)]
+
+    #region safelyEditableVariables
+    [Header("Safely Editable Variables")]
+    public Vector3 resetPos = new Vector3(0.0f, 5.0f, 0.0f);    // the position that player will be teleported to upon dying
 
     public float moveSpeed;
     public float rotateSpeed;
@@ -25,28 +45,24 @@ public class PlayerController : MonoBehaviour
     private Vector2 m_Rotation;
     private Vector2 m_Move;
     private float m_Select;
-
-    public bool hasJumped;
-    public bool isFalling;
-    public float storedRot;
-
-    public Rigidbody rbody;
-    public new Collider collider;
-    public Animator animator;
-    public GameObject dropPos;      // where an item prefab is dropped when DropItem is called
-
-    public PlayerInventory inventory;
-    public UI ui;
-    public Crafting craftScript;
+    
     public int quantToDrop;         // what quantity of an item should drop when DropItem is called?
+    #endregion
 
+    #region leaveAlone
+    [HideInInspector]
+    public bool gameIsPaused;
+    bool hasJumped;
+    bool isFalling;
+    float storedRot;
+    bool reseting;
+    [HideInInspector]
     public bool itemInRange;
+    [HideInInspector]
     public GameObject item;
+    [HideInInspector]
     public bool noRoom;
-
-    public new Camera camera;
-
-    public GraphicRaycaster graphicRaycaster;
+    #endregion
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -95,9 +111,9 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < inventory.itemSlots.Length; i++)
             {
-                if (inventory.itemSlots[i] != null)
+                if (inventory.itemSlots[i].quantity != 0)
                 {
-                    if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].itemName) // check all slots for the item being picked up
+                    if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].item.GetComponent<Item>().itemName) // check all slots for the item being picked up
                     {
                         inventory.slotToAddTo = i + 1;   // if you already have one, select the slot it is in
                         return;
@@ -196,17 +212,22 @@ public class PlayerController : MonoBehaviour
     }
     public void InputInteract(InputAction.CallbackContext obj)
     {
-        if(item != null && !gameIsPaused && itemInRange)
+        if (obj.performed)
         {
-            if(item.GetComponent<Item>().type.ToString() == "Resource")
+            if(item != null && !gameIsPaused && itemInRange)
             {
-                inventory.PickUpItem(item.GetComponent<Item>(), 1);
-                ui.AddItem();
-                itemInRange = false;
-                inventory.slotToAddTo = 0;
-                inventory.firstEmptyFound = false;
-                Destroy(item);
-                item = null;
+                if(item.GetComponent<Item>().type.ToString() == "Resource")
+                {
+                    if(inventory.PickUpItem(item.GetComponent<Item>(), 1))
+                    {
+                        ui.AddItem();
+                        itemInRange = false;
+                        inventory.slotToAddTo = 0;
+                        inventory.firstEmptyFound = false;
+                        Destroy(item);
+                        item = null;
+                    }
+                }
             }
         }
     }
@@ -215,17 +236,11 @@ public class PlayerController : MonoBehaviour
     {
         if (obj.performed)
         {
-            for(int i = 0; i < inventory.allPossibleItems.Length; i++)
+            if(inventory.itemSlots[ui.selectedItem].quantity != 0)
             {
-                if(inventory.itemSlots[ui.selectedItem] != null)
+                for (int j = 0; j < quantToDrop; j++)
                 {
-                    if(inventory.allPossibleItems[i].itemName == inventory.itemSlots[ui.selectedItem].itemName)
-                    {
-                        for(int j = 0; j < quantToDrop; j++)
-                        {
-                            Instantiate(inventory.allPossibleItems[i], dropPos.transform.position, transform.rotation);
-                        }
-                    }
+                    Instantiate(inventory.itemSlots[ui.selectedItem].item, dropPos.transform.position, transform.rotation);
                 }
             }
 
@@ -249,7 +264,7 @@ public class PlayerController : MonoBehaviour
         {
             if (item.GetComponent<Item>().type.ToString() == "Source")
             {
-                if(inventory.itemSlots[ui.selectedItem] != null && item.GetComponent<Item>().resourceType != null)
+                if(inventory.itemSlots[ui.selectedItem].quantity != 0 && item.GetComponent<Item>().resourceType != null)
                 {
                     for (int i = 0; i < inventory.craftableItems.Length; i++)
                     {
@@ -259,16 +274,16 @@ public class PlayerController : MonoBehaviour
                         }
                     }
 
-                    if (inventory.itemSlots[ui.selectedItem].itemName.ToString() == correctTool)
+                    if (inventory.itemSlots[ui.selectedItem].item.itemName.ToString() == correctTool)
                     {
                         int count = 0;
                         for (int j = 0; j < inventory.itemSlots.Length; j++)
                         {
-                            if (inventory.itemSlots[j] != null)
+                            if (inventory.itemSlots[j].quantity != 0)
                             {
-                                if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].itemName) // check all slots for the item being picked up
+                                if (item.GetComponent<Item>().resourceType.GetComponent<Item>().itemName == inventory.itemSlots[j].item.GetComponent<Item>().itemName) // check all slots for the item being picked up
                                 {
-                                    inventory.itemQuantities[j] += 3;
+                                    inventory.itemSlots[j].quantity += 3;
                                     itemInRange = false;
                                     Destroy(item);
                                     item = null;

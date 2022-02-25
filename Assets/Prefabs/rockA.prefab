@@ -100,6 +100,7 @@ MonoBehaviour:
   itemName: stoneBig
   itemImage: {fileID: 0}
   sortID: 0
+  prefab: {fileID: 2111795254108425119}
   type: 2
   resourceType: {fileID: 3797401488587302182, guid: 1e6bb173372c5a645b7bae5950cdb3ed, type: 3}
   cost: 0

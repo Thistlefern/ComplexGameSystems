@@ -100,6 +100,7 @@ MonoBehaviour:
   itemName: 
   itemImage: {fileID: 0}
   sortID: 0
+  prefab: {fileID: 4096501083795416457}
   type: 2
   resourceType: {fileID: 2726863944378602285, guid: 9639f6e07b74ece40a31363166a69333, type: 3}
   cost: 0

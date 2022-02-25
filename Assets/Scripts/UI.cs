@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using JosiePlayerInventory;
 
 public class UI : MonoBehaviour
 {
@@ -13,11 +14,11 @@ public class UI : MonoBehaviour
     public GameObject hotbarUI;
     public GameObject backpackUI;
     public TMP_Text pickupText;
-    // public TMP_Text errorText;
     
     public Image[] inventorySlots;
     public TMP_Text[] inventoryQuantities;
 
+    public int hotbarNumberOfSlots;
     public Image[] hotbarSlots;
     public TMP_Text[] hotbarQuantities;
 
@@ -159,29 +160,29 @@ public class UI : MonoBehaviour
         
         if(inventorySlots[playerInventory.slotToAddTo - 1].sprite.name == "UIMask")
         {
-            inventorySlots[playerInventory.slotToAddTo - 1].sprite = playerInventory.itemSlots[playerInventory.slotToAddTo - 1].itemImage;
+            inventorySlots[playerInventory.slotToAddTo - 1].sprite = playerInventory.itemSlots[playerInventory.slotToAddTo - 1].item.itemImage;
         }
 
-        inventoryQuantities[playerInventory.slotToAddTo - 1].text = playerInventory.itemQuantities[playerInventory.slotToAddTo - 1].ToString();
+        inventoryQuantities[playerInventory.slotToAddTo - 1].text = playerInventory.itemSlots[playerInventory.slotToAddTo - 1].quantity.ToString();
     }
 
     public void UpdateSpritesAndQuantities(int number)
     {
         if (!currentlyCrafting)
         {
-            for (int i = 0; i < playerInventory.hotbarItems; i++)
+            for (int i = 0; i < hotbarNumberOfSlots; i++)
             {
-                if (playerInventory.itemSlots[number] != null)
+                if (playerInventory.itemSlots[number].item != null)
                 {
-                    inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
-                    inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
-                }                                                                                           // the quantity will show as 0.
+                    inventorySlots[number].sprite = playerInventory.itemSlots[number].item.itemImage;
+                    inventoryQuantities[number].text = playerInventory.itemSlots[number].quantity.ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
+                }                                                                                               // the quantity will show as 0.
 
-                if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+                if (playerInventory.itemSlots[i].quantity == 0 && inventorySlots[i].sprite.name != "UIMask")
                 {
                     inventorySlots[i].sprite = nullSprite;
                     inventoryQuantities[i].text = "";
-                    playerInventory.itemSlots[i] = null;
+                    playerInventory.itemSlots[i].item = null;
                 }
             }
         }
@@ -189,17 +190,17 @@ public class UI : MonoBehaviour
         {
             for (int i = 0; i < playerInventory.maxItems; i++)
             {
-                if (playerInventory.itemSlots[number] != null)
+                if (playerInventory.itemSlots[number].item != null)
                 {
-                    inventorySlots[number].sprite = playerInventory.itemSlots[number].itemImage;
-                    inventoryQuantities[number].text = playerInventory.itemQuantities[number].ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
-                }                                                                                           // the quantity will show as 0.
+                    inventorySlots[number].sprite = playerInventory.itemSlots[number].item.itemImage;
+                    inventoryQuantities[number].text = playerInventory.itemSlots[number].quantity.ToString();   // NOTE: if a player has an item dragged into their inventory in the editor during play,
+                }                                                                                               // the quantity will show as 0.
 
-                if (playerInventory.itemQuantities[i] == 0 && inventorySlots[i].sprite.name != "UIMask")
+                if (playerInventory.itemSlots[i].quantity == 0 && inventorySlots[i].sprite.name != "UIMask")
                 {
                     inventorySlots[i].sprite = nullSprite;
                     inventoryQuantities[i].text = "";
-                    playerInventory.itemSlots[i] = null;
+                    playerInventory.itemSlots[i].item = null;
                 }
             }
         }
@@ -294,21 +295,21 @@ public class UI : MonoBehaviour
         }
         for (int i = 0; i < componentCheck.Length; i++)
         {
-            requirementSprites[i].sprite = playerInventory.craftableItems[number].components[i].itemImage;
-            requirementQuantity[i].text = "x" + playerInventory.craftableItems[number].componentQuantities[i].ToString();
+            requirementSprites[i].sprite = playerInventory.craftableItems[number].components[i].item.itemImage;
+            requirementQuantity[i].text = "x" + playerInventory.craftableItems[number].components[i].quantity.ToString();
         }
 
         int nullCount = 0;
 
         for (int c = 0; c < playerInventory.itemSlots.Length; c++)
         {
-            if (playerInventory.itemSlots[c] != null)
+            if (playerInventory.itemSlots[c].item != null)
             {
                 for (int i = 0; i < componentCheck.Length; i++)
                 {
-                    if (playerInventory.craftableItems[number].components[i].itemName == playerInventory.itemSlots[c].itemName)
+                    if (playerInventory.craftableItems[number].components[i].item == playerInventory.itemSlots[c].item)
                     {
-                        if (playerInventory.craftableItems[number].componentQuantities[i] <= playerInventory.itemQuantities[c])
+                        if (playerInventory.craftableItems[number].components[i].quantity <= playerInventory.itemSlots[c].quantity)
                         {
                             componentCheck[i] = true;   // Player has enough of this item
                         }
@@ -334,14 +335,14 @@ public class UI : MonoBehaviour
             }
         }
 
-        for(int i = 0; i < playerInventory.craftableItems[number].componentQuantities.Length; i++)
+        for(int i = 0; i < playerInventory.craftableItems[number].components.Length; i++)
         {
             int noneOfThisItem = 0;
             for(int c = 0; c < playerInventory.itemSlots.Length; c++)
             {
-                if (playerInventory.itemSlots[c] != null)
+                if (playerInventory.itemSlots[c].item != null)
                 {
-                    if (playerInventory.itemSlots[c].itemName != playerInventory.craftableItems[number].components[i].itemName)
+                    if (playerInventory.itemSlots[c].item != playerInventory.craftableItems[number].components[i].item)
                     {
                         noneOfThisItem++;
                     }
