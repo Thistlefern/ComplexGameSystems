@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
+﻿using UnityEngine;
 using System;
 using JosieItem;
 using JosieRecipe;
@@ -13,7 +10,6 @@ namespace JosiePlayerInventory
     public struct SlotInfo
     {
         public Item item;
-        //public string item;
         public int quantity;
     }
 
@@ -100,9 +96,6 @@ namespace JosiePlayerInventory
         {
             for (int i = 0; i < max; i++)
             {
-                #region oldway
-                // This is the old way that I sorted. I had an array of all of the possible items the player could obtain in the game, and assigned a sortID to each item based on that array
-
                 if (itemSlots[i].quantity != 0)
                 {
                     for (int j = 0; j < ItemDatabase.instance.items.Length; j++)
@@ -113,14 +106,6 @@ namespace JosiePlayerInventory
                         }
                     }
                 }
-                #endregion
-
-                //#region alphabetical
-                //Array.Sort<SlotInfo>(itemSlots, (x, y) => String.Compare(x.item.itemName, y.item.itemName, StringComparison.CurrentCultureIgnoreCase));
-                //#endregion
-
-                //#region sortID
-                //#endregion
             }
 
             BubbleSort(itemSlots, max);
@@ -140,7 +125,6 @@ namespace JosiePlayerInventory
                     if (items[s].quantity == 0 && items[s + 1].quantity != 0)
                     {
                         items[s] = items[s + 1];
-                        //itemSlots[s].quantity = itemSlots[s + 1].quantity;
                         items[s + 1].item = null;
                         itemSlots[s + 1].quantity = 0;
                     }
@@ -164,15 +148,9 @@ namespace JosiePlayerInventory
                 {
                     if (items[s].quantity != 0 && items[s + 1].quantity != 0 && items[s].item.sortID > items[s + 1].item.sortID)
                     {
-                        //Item tmp = items[s].item;
-                        //int tmp2 = itemSlots[s].quantity;
                         SlotInfo tmp = items[s];
-
                         items[s] = items[s + 1];
-                        //quantities[s] = quantities[s + 1];
-
                         items[s + 1] = tmp;
-                        //quantities[s + 1] = tmp2;
                     }
                     else
                     {

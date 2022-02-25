@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
-using System;
-using UnityEngine.UI;
 using NaughtyAttributes;
 using JosiePlayerInventory;
+using JosieItem;
+using JosieCrafting;
 
 public class PlayerController : MonoBehaviour
 {
