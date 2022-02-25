@@ -92,6 +92,49 @@ namespace JosiePlayerInventory
                 }
             }
         }
+
+        public void ChangeSlotToAddTo(Item item)
+        {
+            int count = 0;
+
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                if (itemSlots[i].quantity != 0)
+                {
+                    if (item.itemName == itemSlots[i].item.GetComponent<Item>().itemName) // check all slots for the item being picked up
+                    {
+                        slotToAddTo = i + 1;   // if you already have one, select the slot it is in
+                        return;
+                    }
+                    else
+                    {
+                        count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
+                    }
+                }
+                else
+                {
+                    count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
+                    if (!firstEmptyFound)   // keep track of the first empty slot that the player has
+                    {
+                        firstEmptyFound = true;
+                        firstEmpty = i;
+                    }
+                }
+            }
+
+            if (count == itemSlots.Length)    // if no slots have this item, go back to the first empty slot
+            {
+                if (!firstEmptyFound)
+                {
+                    invFull = true;
+                }
+                else
+                {
+                    slotToAddTo = firstEmpty + 1;  // if there is an empty slot, select that slot
+                }
+            }
+        }
+
         public void Sort(int max)
         {
             for (int i = 0; i < max; i++)
@@ -170,6 +213,7 @@ namespace JosiePlayerInventory
             bool success = false;
 
             FindFirstEmpty();
+            ChangeSlotToAddTo(thing);
 
             if (invFull)
             {

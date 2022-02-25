@@ -91,8 +91,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        int count = 0;
-
         if (other.CompareTag("Ocean"))
         {
             rbody.position = resetPos;
@@ -105,44 +103,8 @@ public class PlayerController : MonoBehaviour
             itemInRange = true;
             item = other.gameObject;
 
-            for (int i = 0; i < inventory.itemSlots.Length; i++)
-            {
-                if (inventory.itemSlots[i].quantity != 0)
-                {
-                    if (other.GetComponent<Item>().itemName == inventory.itemSlots[i].item.GetComponent<Item>().itemName) // check all slots for the item being picked up
-                    {
-                        inventory.slotToAddTo = i + 1;   // if you already have one, select the slot it is in
-                        return;
-                    }
-                    else
-                    {
-                        count++;    // counting the slots that don't contain the item being picked up (this one counts filled slots)
-                    }
-                }
-                else
-                {
-                    count++;        // counting the slots that don't contain the item being picked up (this one counts empty slots)
-                    if (!inventory.firstEmptyFound)   // keep track of the first empty slot that the player has
-                    {
-                        inventory.firstEmptyFound = true;
-                        inventory.firstEmpty = i;
-                    }
-                }
-            }
-
-            if (count == inventory.itemSlots.Length)    // if no slots have this item, go back to the first empty slot
-            {
-                if (!inventory.firstEmptyFound)
-                {
-                    inventory.invFull = true;
-                }
-                else
-                {
-                    inventory.slotToAddTo = inventory.firstEmpty + 1;  // if there is an empty slot, select that slot
-                }
-            }
+            inventory.ChangeSlotToAddTo(other.GetComponent<Item>());
         }
-
     }
 
     private void OnTriggerExit(Collider other)
